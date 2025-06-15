@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as nnf
-from constants import DEBUG
+from spaghetti.constants import DEBUG
 from typing import Tuple, List, Union, Callable, Type, Iterator, Dict, Set, Optional, Any, Sized, Iterable
 from types import DynamicClassAttribute
 from enum import Enum, unique
