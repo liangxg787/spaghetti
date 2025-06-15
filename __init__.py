@@ -5,3 +5,4 @@
 @File : __init__.py.py
 @Project : Enhancing_Sketch-to-3D_Controllability
 """
+VERSION = "1.0.0"

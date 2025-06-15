@@ -6,7 +6,7 @@
 @Project : Enhancing_Sketch-to-3D_Controllability
 """
 from setuptools import setup, find_packages
-from spaghetti import VERSION
+from __init__ import VERSION
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
