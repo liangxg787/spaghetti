@@ -68,6 +68,7 @@ def model_lc(opt: options.Options, override_model: Optional[str] = None) -> Tupl
 
     already_init = False
     params_path = f'{opt.cp_folder}/options.pkl'
+    print('>'*9, 'params_path', params_path)
     opt_ = files_utils.load_pickle(params_path)
 
     if opt_ is not None:
