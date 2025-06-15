@@ -3,7 +3,6 @@ from spaghetti import constants as const
 import pickle
 from shutil import copyfile, move
 from spaghetti.custom_types import *
-from spaghetti import options
 from PIL import Image
 import time
 import json

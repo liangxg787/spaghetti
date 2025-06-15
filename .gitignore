@@ -9,3 +9,4 @@ __pycache__/
 **_ig_**
 dist
 spaghetti.egg-info
+assets/checkpoints
