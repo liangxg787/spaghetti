@@ -6,7 +6,8 @@
 @Project : Enhancing_Sketch-to-3D_Controllability
 """
 from setuptools import setup, find_packages
-from . import VERSION
+
+VERSION = "1.0.0"
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
