@@ -3,7 +3,8 @@ from custom_types import *
 import options
 import constants
 from utils import train_utils, files_utils, mcubes_meshing, mesh_utils, myparse
-from models import models_utils, occ_loss, gm_utils
+from external.spaghetti.spaghetti.models import occ_loss
+from external.spaghetti.spaghetti.models import gm_utils, models_utils
 from ui import occ_inference
 
 

@@ -7,7 +7,6 @@ from ui import ui_utils, ui_controllers, inference_processing, gaussian_status
 import options
 import vtk.util.numpy_support as numpy_support
 import constants
-import sys
 
 
 def to_local(func):
@@ -171,7 +170,7 @@ class StagedCanvas(ui_utils.CanvasRender, abc.ABC):
                  bg_color: ui_utils.RGB_COLOR, stroke_color: Optional[ui_utils.RGBA_COLOR]):
         super(StagedCanvas, self).__init__(viewport, render_window, bg_color, stroke_color)
         self.stage = ui_controllers.GmmMeshStage(opt, ['-1', '-1', '-1'], self, -1, ui_utils.ViewStyle((255, 255, 255),
-                                                                                      (255, 255, 255), ui_utils.bg_target_color, 1))
+                                                                                                       (255, 255, 255), ui_utils.bg_target_color, 1))
 
 
 class RenderPop(StagedCanvas):
@@ -682,7 +681,7 @@ def run(model_tag, samples_dir, with_model: bool = True):
     interactor = vtk.vtkRenderWindowInteractor()
     interactor.SetRenderWindow(render_window)
     renderer_main = RenderMain(opt, (0., .15, 1., 1.), samples_root, render_window, ui_utils.bg_source_color,
-                                          list(ui_utils.bg_target_color) + [200], with_model)
+                               list(ui_utils.bg_target_color) + [200], with_model)
     mesh_scroller = MeshScroller(opt, (0., 0., 1., .15), render_window, interactor, ui_utils.bg_target_color,
                                  samples_root)
     renderer_pop = RenderPop(opt, min_viewport, max_viewport, render_window, interactor, ui_utils.bg_stage_color,
