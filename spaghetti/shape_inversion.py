@@ -1,5 +1,5 @@
 import abc
-from custom_types import *
+from spaghetti.custom_types import *
 from spaghetti import options
 from spaghetti import constants
 from spaghetti.utils import myparse, mesh_utils, files_utils
