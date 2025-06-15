@@ -148,12 +148,12 @@ def load_np(path: str):
 def load_pickle(path: str):
     data = None
     if os.path.isfile(path):
-        try:
-            with open(path, 'rb') as f:
-                data = pickle.load(f)
-        except ValueError:
-            with open(path, 'rb') as f:
-                data = pickle5.load(f)
+        # try:
+        with open(path, 'rb') as f:
+            data = pickle.load(f)
+        # except ValueError:
+        #     with open(path, 'rb') as f:
+        #         data = pickle5.load(f)
     return data
 
 
