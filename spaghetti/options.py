@@ -1,8 +1,8 @@
 from __future__ import annotations
 import os
 import pickle
-import constants as const
-from custom_types import *
+import spaghetti.constants as const
+from spaghetti.custom_types import *
 
 
 class Options:
