@@ -1,7 +1,7 @@
 import abc
 from custom_types import *
-import options
-import constants
+from spaghetti import options
+from spaghetti import constants
 from spaghetti.utils import myparse, mesh_utils, files_utils
 from spaghetti.utils import train_utils, mcubes_meshing
 from spaghetti.models import occ_loss

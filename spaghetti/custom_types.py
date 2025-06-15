@@ -1,7 +1,7 @@
 # import open3d
 import numpy as np
 import torch
-from constants import DEBUG
+from spaghetti.constants import DEBUG
 from typing import Tuple, List, Union, Optional
 import torch.optim.optimizer
 import torch.utils.data
