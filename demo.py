@@ -1,13 +1,13 @@
 from __future__ import annotations
 import abc
-from spaghetti.custom_types import *
+from custom_types import *
 import vtk
-from spaghetti.utils import myparse, files_utils
-from spaghetti.ui import gaussian_status
-from spaghetti.ui import ui_utils, inference_processing, ui_controllers
-from spaghetti import options
+from utils import myparse, files_utils
+from ui import gaussian_status, inference_processing, ui_controllers
+from ui import ui_utils
+import options
 import vtk.util.numpy_support as numpy_support
-from spaghetti import constants
+import constants
 
 
 def to_local(func):

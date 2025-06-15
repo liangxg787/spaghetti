@@ -1,12 +1,14 @@
 from __future__ import annotations
 import vtk
 import vtk.util.numpy_support as numpy_support
-from spaghetti.custom_types import *
-from spaghetti.utils import rotation_utils, train_utils, files_utils
-from spaghetti.models import gm_utils
-from spaghetti.ui import gaussian_status
-from spaghetti.ui import ui_utils, inference_processing
-from spaghetti import options, constants
+from custom_types import *
+from utils import rotation_utils, files_utils
+from utils import train_utils
+from models import gm_utils
+from ui import gaussian_status, inference_processing
+from ui import ui_utils
+import options
+import constants
 
 
 def filter_by_inclusion(gaussian: gaussian_status.GaussianStatus) -> bool:

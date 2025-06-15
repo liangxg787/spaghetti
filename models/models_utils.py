@@ -1,6 +1,5 @@
-from spaghetti.custom_types import *
+from custom_types import *
 from abc import ABC
-import math
 
 
 def torch_no_grad(func):

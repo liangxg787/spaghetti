@@ -1,9 +1,11 @@
-from spaghetti.custom_types import *
+from custom_types import *
 from tqdm import tqdm
-from spaghetti.utils import files_utils
+from utils import files_utils
 import os
-from spaghetti import options, constants
-from spaghetti.models import occ_gmm, models_utils
+import options
+import constants
+from models import models_utils
+from models import occ_gmm
 
 LI = Union[T, float, int]
 Models = {'spaghetti': occ_gmm.Spaghetti}

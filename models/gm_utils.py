@@ -1,4 +1,4 @@
-from spaghetti.custom_types import *
+from custom_types import *
 
 
 def get_gm_support(gm, x):

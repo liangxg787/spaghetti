@@ -25,7 +25,8 @@ setup(
     keywords='spaghetti',
     include_package_data=True,
     zip_safe=False,
-    packages=['spaghetti', 'spaghetti.models', 'spaghetti.ui', 'spaghetti.utils'],
+    # packages=['spaghetti', 'spaghetti.models', 'spaghetti.ui', 'spaghetti.utils'],
+    packages=['.', 'models', 'ui', 'utils'],
     install_requires=[],
     entry_points={},
     classifiers=[

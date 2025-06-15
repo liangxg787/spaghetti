@@ -1,8 +1,8 @@
-/spaghetti/assets/mesh
-!/spaghetti/assets/readme_resources/
-!/spaghetti/assets/ui_resources/
-!/spaghetti/assets/splits/
-!/spaghetti/assets/mesh/
+/assets/mesh
+!/assets/readme_resources/
+!/assets/ui_resources/
+!/assets/splits/
+!/assets/mesh/
 *.vtk
 .idea/
 __pycache__/

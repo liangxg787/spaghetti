@@ -1,15 +1,16 @@
 import os
-from spaghetti.custom_types import *
+from custom_types import *
 import multiprocessing as mp
 from multiprocessing import synchronize
-from spaghetti import options, constants
-from spaghetti.ui.occ_inference import Inference
-from spaghetti.utils import files_utils
+import options
+import constants
+from ui.occ_inference import Inference
+from utils import files_utils
 import ctypes
 if constants.IS_WINDOWS or 'DISPLAY' in os.environ:
     from pynput.keyboard import Key, Controller
 else:
-    from spaghetti.ui.mock_keyboard import Key, Controller
+    from ui.mock_keyboard import Key, Controller
 
 
 class UiStatus(Enum):

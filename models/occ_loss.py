@@ -1,4 +1,4 @@
-from spaghetti.custom_types import *
+from custom_types import *
 
 
 def occupancy_bce(predict: T, winding_gt: T, ignore: Optional[T] = None, *args) -> T:

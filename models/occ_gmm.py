@@ -1,10 +1,9 @@
-from spaghetti.options import Options
-from spaghetti.models import models_utils, transformer
-from spaghetti import constants
-from spaghetti.custom_types import *
+from options import Options
+from models import models_utils, transformer
+import constants
+from custom_types import *
 from torch import distributions
 import math
-from spaghetti.utils import files_utils
 
 
 def dot(x, y, dim=3):

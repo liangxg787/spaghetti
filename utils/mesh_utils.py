@@ -1,10 +1,10 @@
 # from chamferdist import ChamferDistance
-from spaghetti.custom_types import *
-from spaghetti.constants import EPSILON
+from custom_types import *
+from constants import EPSILON
 from functools import reduce
 import igl
 # import trimesh
-from spaghetti.custom_types import T_Mesh, TS
+from custom_types import T_Mesh, TS
 
 
 def scale_all(*values: T):
