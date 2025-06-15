@@ -24,6 +24,7 @@ def model_factory(opt: options.Options, override_model: Optional[str], device: D
 
 def load_model(opt, device, suffix: str = '', override_model: Optional[str] = None) -> models_utils.Model:
     model_path = f'{opt.cp_folder}/model{"_" + suffix if suffix else ""}'
+    print('>'*9, 'model_path', model_path)
     model = model_factory(opt, override_model, device)
     name = opt.model_name if override_model is None else override_model
     if os.path.isfile(model_path):
