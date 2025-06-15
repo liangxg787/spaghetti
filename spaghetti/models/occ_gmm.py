@@ -1,9 +1,12 @@
+import math
+
+from torch import distributions
+
 from spaghetti.options import Options
 from spaghetti.models import models_utils, transformer
 from spaghetti import constants
 from spaghetti.custom_types import *
-from torch import distributions
-import math
+from spaghetti.utils import files_utils
 
 
 def dot(x, y, dim=3):
@@ -56,7 +59,8 @@ class DecompositionNetwork(nn.Module):
         self.l1 = nn.Linear(opt.dim_z, self.bottom_width * opt.dim_h)
         if opt.decomposition_network == 'mlp':
 
-            self.to_zb = models_utils.MLP((opt.dim_h, *([2 * opt.dim_h] * opt.decomposition_num_layers), opt.dim_h))
+            self.to_zb = models_utils.MLP(
+                (opt.dim_h, *([2 * opt.dim_h] * opt.decomposition_num_layers), opt.dim_h))
         else:
             self.to_zb = transformer.Transformer(opt.dim_h, opt.num_heads, opt.num_layers, act=act,
                                                  norm_layer=norm_layer)
@@ -102,7 +106,7 @@ class OccupancyNetwork(nn.Module):
         _, attn = self.occ_transformer.forward_with_attention(pos, zh, mask, alpha)
         return attn
 
-    def forward(self, coords: T, zh: T,  mask: TN = None, alpha: TN = None) -> T:
+    def forward(self, coords: T, zh: T, mask: TN = None, alpha: TN = None) -> T:
         pos = self.get_pos(coords)
         x = self.occ_transformer(pos, zh, mask, alpha)
         out = self.occ_mlp(pos, x)
@@ -122,6 +126,7 @@ class OccupancyNetwork(nn.Module):
         self.occ_transformer = transformer.Transformer(opt.pos_dim + constants.DIM,
                                                        opt.num_heads_head, opt.num_layers_head,
                                                        dim_ref=opt.dim_h)
+
 
 class DecompositionControl(models_utils.Model):
 
@@ -212,7 +217,8 @@ class Spaghetti(models_utils.Model):
 
     def interpolate_higher(self, z: T, num_between: Optional[int] = None):
         z_between = self.interpolate_(z, num_between)
-        zh, gmms = self.decomposition_control.forward_split(self.decomposition_control.forward_upper(z_between))
+        zh, gmms = self.decomposition_control.forward_split(
+            self.decomposition_control.forward_upper(z_between))
         return zh, gmms
 
     def interpolate(self, item_a: int, item_b: int, num_between: int):

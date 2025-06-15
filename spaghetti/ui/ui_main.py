@@ -1,8 +1,8 @@
 import sys
 import vtk
+
 from spaghetti.custom_types import *
-from spaghetti.ui import ui_utils
-from spaghetti.ui import ui_controllers, interactors
+from spaghetti.ui import ui_utils, ui_controllers, interactors
 from spaghetti import options
 
 

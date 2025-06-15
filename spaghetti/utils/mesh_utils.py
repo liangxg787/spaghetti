@@ -1,9 +1,10 @@
 # from chamferdist import ChamferDistance
-from spaghetti.custom_types import *
-from spaghetti.constants import EPSILON
 from functools import reduce
 import igl
 # import trimesh
+
+from spaghetti.custom_types import *
+from spaghetti.constants import EPSILON
 from spaghetti.custom_types import T_Mesh, TS
 
 
@@ -27,7 +28,8 @@ def get_faces_normals(mesh: Union[T_Mesh, T]) -> T:
         vs_faces = mesh
     if vs_faces.shape[-1] == 2:
         vs_faces = torch.cat(
-            (vs_faces, torch.zeros(*vs_faces.shape[:2], 1, dtype=vs_faces.dtype, device=vs_faces.device)), dim=2)
+            (vs_faces, torch.zeros(*vs_faces.shape[:2], 1, dtype=vs_faces.dtype, device=vs_faces.device)),
+            dim=2)
     face_normals = torch.cross(vs_faces[:, 1, :] - vs_faces[:, 0, :], vs_faces[:, 2, :] - vs_faces[:, 1, :])
     return face_normals
 
@@ -88,7 +90,7 @@ def scale_by_ref(mesh, ref_mesh, in_place=True, scale=1.):
     return vs, mesh[1]
 
 
-def to_unit_sphere(mesh: T_Mesh,  in_place: bool = True, scale=1.) -> T_Mesh:
+def to_unit_sphere(mesh: T_Mesh, in_place: bool = True, scale=1.) -> T_Mesh:
     vs, faces = mesh
     if not in_place:
         vs = vs.clone()
@@ -107,7 +109,8 @@ def scale_from_ref(mesh: T_Mesh, center: T, scale: float, in_place: bool = True)
     return vs, faces
 
 
-def to_unit_cube(*meshes: T_Mesh_T, scale=1, in_place: bool = True) -> Tuple[Union[T_Mesh_T, Tuple[T_Mesh_T, ...]], Tuple[T, float]]:
+def to_unit_cube(*meshes: T_Mesh_T, scale=1, in_place: bool = True) -> Tuple[
+    Union[T_Mesh_T, Tuple[T_Mesh_T, ...]], Tuple[T, float]]:
     remove_me = 0
     meshes = [(mesh, remove_me) if type(mesh) is T else mesh for mesh in meshes]
     vs, faces = meshes[0]
@@ -123,6 +126,8 @@ def to_unit_cube(*meshes: T_Mesh_T, scale=1, in_place: bool = True) -> Tuple[Uni
     if len(meshes_) == 1:
         meshes_ = meshes_[0]
     return meshes_, (center, scale)
+
+
 # # in place
 # def to_unit_edge(*meshes: T_Mesh) -> Tuple[Union[T_Mesh, Tuple[T_Mesh, ...]], Tuple[T, float]]:
 #     ref = meshes[0]
@@ -237,7 +242,7 @@ def get_sampled_fe(fe: T, mesh: T_Mesh, face_ids: T, uvw: TN) -> T:
     return fe_iner
 
 
-def sample_on_faces(mesh: T_Mesh,  num_samples: int) -> TS:
+def sample_on_faces(mesh: T_Mesh, num_samples: int) -> TS:
     vs, faces = mesh
     uvw = sample_uvw([faces.shape[0], num_samples], vs.device)
     samples = torch.einsum('fad,fna->fnd', vs[faces], uvw)
@@ -269,7 +274,8 @@ def sample_on_mesh(mesh: T_Mesh, num_samples: int, face_areas: TN = None,
             weighted_p.append(face_areas / face_areas.sum())
         if sample_s == SampleBy.FACES or sample_s == SampleBy.HYB:
             weighted_p.append(torch.ones(mesh[1].shape[0], device=mesh[0].device))
-        chosen_faces_inds = [torch.multinomial(weights, num_samples // len(weighted_p), replacement=True) for weights in weighted_p]
+        chosen_faces_inds = [torch.multinomial(weights, num_samples // len(weighted_p), replacement=True) for
+                             weights in weighted_p]
         if sample_s == SampleBy.HYB:
             chosen_faces_inds = torch.cat(chosen_faces_inds, dim=0)
         chosen_faces = faces[chosen_faces_inds]
@@ -286,7 +292,6 @@ def get_samples(mesh: T_Mesh, num_samples: int, sample_s: SampleBy, *features: T
 
 
 def find_barycentric(vs: T, triangles: T) -> T:
-
     def compute_barycentric(ind):
         triangles[:, ind] = vs
         alpha = compute_face_areas(triangles)[0] / areas
@@ -390,7 +395,6 @@ def chamfer_igl():
 
 
 def simple_chamfer(a: T, b: T, normals_a=None, normals_b=None, dist_mat: Optional[T] = None) -> Union[T, TS]:
-
     def one_direction(fixed: T, search: T, n_f, n_s, closest_id) -> TS:
         min_dist = (fixed - search[closest_id]).norm(2, 1).mean(0)
         if n_f is not None:
@@ -424,7 +428,7 @@ def is_quad(mesh: Union[T_Mesh, Tuple[T, List[List[int]]]]) -> bool:
 
 def align_mesh(mesh: T_Mesh, ref_vs: T) -> T_Mesh:
     vs, faces = mesh
-    dist_mat =  get_dist_mat(vs, ref_vs)
+    dist_mat = get_dist_mat(vs, ref_vs)
     dist, mapping_id = dist_mat.min(1)
     vs_select = dist_mat.min(0)[1]
     if mapping_id.unique().shape[0] != vs.shape[0]:
@@ -481,7 +485,6 @@ def align_mesh(mesh: T_Mesh, ref_vs: T) -> T_Mesh:
 
 
 def triangulate_mesh(mesh: Union[T_Mesh, Tuple[T, List[List[int]]]]) -> Tuple[T_Mesh, Optional[T]]:
-
     def get_skinny(faces_) -> T:
         vs_faces = vs[faces_]
         areas = compute_face_areas(vs_faces)[0]
@@ -495,7 +498,6 @@ def triangulate_mesh(mesh: Union[T_Mesh, Tuple[T, List[List[int]]]]) -> Tuple[T_
         skinny_value = np.sqrt(48) * areas / edges
         return skinny_value
 
-
     if not is_quad(mesh):
         return mesh, None
 
@@ -503,8 +505,10 @@ def triangulate_mesh(mesh: Union[T_Mesh, Tuple[T, List[List[int]]]]) -> Tuple[T_
     device = vs.device
     faces_keep = torch.tensor([face for face in faces if len(face) == 3], dtype=torch.int64, device=device)
     faces_quads = torch.tensor([face for face in faces if len(face) != 3], dtype=torch.int64, device=device)
-    faces_tris_a, faces_tris_b = faces_quads[:, :3], faces_quads[:, torch.tensor([0, 2, 3], dtype=torch.int64)]
-    faces_tris_c, faces_tris_d = faces_quads[:, 1:], faces_quads[:, torch.tensor([0, 1, 3], dtype=torch.int64)]
+    faces_tris_a, faces_tris_b = faces_quads[:, :3], faces_quads[:,
+                                                     torch.tensor([0, 2, 3], dtype=torch.int64)]
+    faces_tris_c, faces_tris_d = faces_quads[:, 1:], faces_quads[:,
+                                                     torch.tensor([0, 1, 3], dtype=torch.int64)]
     skinny = [get_skinny(f) for f in (faces_tris_a, faces_tris_b, faces_tris_c, faces_tris_d)]
     skinny_ab, skinny_cd = torch.stack((skinny[0], skinny[1]), 1), torch.stack((skinny[2], skinny[3]), 1)
     to_flip = skinny_ab.min(1)[0].lt(skinny_cd.min(1)[0])
@@ -517,7 +521,6 @@ def triangulate_mesh(mesh: Union[T_Mesh, Tuple[T, List[List[int]]]]) -> Tuple[T_
 
 
 def igl_prepare(*dtypes):
-
     def decoder(func):
 
         def wrapper(*args, **kwargs):
@@ -529,7 +532,7 @@ def igl_prepare(*dtypes):
 
         if len(dtypes) == 0:
             to_torch = to_torch_empty
-        elif  len(dtypes) == 1:
+        elif len(dtypes) == 1:
             to_torch = to_torch_multi
         else:
             to_torch = to_torch_singe
@@ -627,6 +630,7 @@ def get_fast_inside_outside(mesh: T_Mesh, points: ARRAY):
         labels.append(w)
     return np.concatenate(labels, axis=0)
 
+
 # def get_inside_outside_trimes(mesh: T_Mesh, points: T) -> Optional[ARRAY]:
 #     mesh = mesh_utils.to(mesh, points.device)
 #     mesh = make_data.trimmesh(mesh)
@@ -651,7 +655,8 @@ def trimesh_smooth(mesh, lamb=0.5, iterations=10):
     mesh = trimesh.Trimesh(vertices=mesh[0], faces=mesh[1])
     # trimesh.smoothing.filter_mut_dif_laplacian(mesh, lamb=lamb, iterations=iterations, volume_constraint=True,
     #                                            laplacian_operator=None)
-    trimesh.smoothing.filter_humphrey(mesh, alpha=0.1, beta=lamb, iterations=iterations, laplacian_operator=None)
+    trimesh.smoothing.filter_humphrey(mesh, alpha=0.1, beta=lamb, iterations=iterations,
+                                      laplacian_operator=None)
     return V(mesh.vertices), V(mesh.faces)
 
 
@@ -661,7 +666,8 @@ def split_by_seg(mesh: T_Mesh, seg: TS) -> TS:
     vs, faces = mesh
     vs_mid_faces = vs[faces].mean(1)
     for vs_ in (vs, vs_mid_faces):
-        chamfer_distance_a, chamfer_distance_a_nn = ChamferDistance()(vs_.unsqueeze(0), seg[0].unsqueeze(0), bidirectional=False)
+        chamfer_distance_a, chamfer_distance_a_nn = ChamferDistance()(vs_.unsqueeze(0), seg[0].unsqueeze(0),
+                                                                      bidirectional=False)
         # nn_sanity = slow_nn(vs_mid_faces, seg[0])
         labels_all.append(seg[1][chamfer_distance_a_nn.flatten()])
         # for i in range(seg[1].min(), seg[1].max() + 1):

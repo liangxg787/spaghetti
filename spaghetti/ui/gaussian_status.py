@@ -1,9 +1,10 @@
 from __future__ import annotations
 import vtk
+import vtk.util.numpy_support as numpy_support
+
 from spaghetti.custom_types import *
 from spaghetti.ui import ui_utils
 from spaghetti import constants
-import vtk.util.numpy_support as numpy_support
 
 
 class GaussianData:
@@ -116,11 +117,13 @@ class GaussianStatus(GaussianData):
 
     # copy_constructor
     def copy(self: GaussianStatus, render: vtk.vtkRenderer, view_style: ui_utils.ViewStyle,
-             gaussian_id: Optional[Tuple[int, int]] = None, is_selected: Optional[bool] = None) -> GaussianStatus:
+             gaussian_id: Optional[Tuple[int, int]] = None,
+             is_selected: Optional[bool] = None) -> GaussianStatus:
         if self.disabled:
             return self
         gaussian_id = self.gaussian_id if gaussian_id is None else gaussian_id
-        return GaussianStatus(self.copy_data(), gaussian_id, is_selected or self.is_selected, view_style, render, 1)
+        return GaussianStatus(self.copy_data(), gaussian_id, is_selected or self.is_selected, view_style,
+                              render, 1)
 
     @staticmethod
     def get_new_gaussian() -> vtk.vtkSphereSource:
@@ -258,7 +261,7 @@ class GaussianStatus(GaussianData):
 
     @property
     def disabled(self):
-        return self.mapper is None #or self.mapper.GetInput() is None
+        return self.mapper is None  # or self.mapper.GetInput() is None
 
     def make_symmetric(self, force_include: bool):
         if self.disabled or self.twin is None or (not force_include and self.included != self.twin.included):
@@ -351,7 +354,8 @@ class GaussianStatus(GaussianData):
             return None
         return self.actor.GetMapper()
 
-    def __init__(self, gaussian, gaussian_id: Tuple[int, int], is_selected: bool, view_style: ui_utils.ViewStyle,
+    def __init__(self, gaussian, gaussian_id: Tuple[int, int], is_selected: bool,
+                 view_style: ui_utils.ViewStyle,
                  render: vtk.vtkRenderer, normalized_phi: float, actor: Optional[vtk.vtkActor] = None):
         self.view_style = view_style
         super(GaussianStatus, self).__init__(gaussian)

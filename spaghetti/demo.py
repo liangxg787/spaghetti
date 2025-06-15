@@ -1,12 +1,15 @@
 from __future__ import annotations
 import abc
-from spaghetti.custom_types import *
+import sys
+
 import vtk
-from spaghetti.utils import myparse, files_utils
-from spaghetti.ui import ui_controllers, gaussian_status, inference_processing
-from spaghetti.ui import ui_utils
-from spaghetti import options
 import vtk.util.numpy_support as numpy_support
+
+from spaghetti.custom_types import *
+from spaghetti.utils import myparse, files_utils
+from spaghetti.ui import ui_utils, ui_controllers, gaussian_status, inference_processing
+from spaghetti import options
+
 from spaghetti import constants
 
 
@@ -19,6 +22,7 @@ def to_local(func):
             mouse_pos = float(mouse_pos[0]) / size[0] - .5, float(mouse_pos[1]) / size[1] - .5
             mouse_pos = torch.tensor([mouse_pos[0], mouse_pos[1]])
         return func(self, mouse_pos, *args, **kwargs)
+
     return inner
 
 
@@ -47,7 +51,8 @@ class TransitionController:
             projection = nnf.normalize(projection, p=2, dim=0)
             projections.append(projection)
         sign = (projections[0][(self.moving_axis + 2) % 3] * projections[1][(self.moving_axis + 1) % 3]
-                - projections[0][(self.moving_axis + 1) % 3] * projections[1][(self.moving_axis + 2) % 3]).sign()
+                - projections[0][(self.moving_axis + 1) % 3] * projections[1][
+                    (self.moving_axis + 2) % 3]).sign()
         angle = (torch.acos(torch.einsum('d,d', *projections)) * sign).item()
         return ui_utils.get_rotation_matrix(angle, self.moving_axis)
 
@@ -70,7 +75,8 @@ class TransitionController:
         return transition
 
     @to_local
-    def init_transition(self, mouse_pos: Tuple[int, int], transition_origin: T, transition_type: ui_utils.EditType):
+    def init_transition(self, mouse_pos: Tuple[int, int], transition_origin: T,
+                        transition_type: ui_utils.EditType):
         transform_mat_vtk = self.camera.GetViewTransformMatrix()
         dir_2d = torch.zeros(3, 4)
         for i in range(3):
@@ -167,17 +173,21 @@ class StagedCanvas(ui_utils.CanvasRender, abc.ABC):
     def save(self, root: str):
         self.stage.save(root, ui_controllers.filter_by_selection)
 
-    def __init__(self, opt, viewport:Tuple[float, float, float, float], render_window: vtk.vtkRenderWindow,
+    def __init__(self, opt, viewport: Tuple[float, float, float, float], render_window: vtk.vtkRenderWindow,
                  bg_color: ui_utils.RGB_COLOR, stroke_color: Optional[ui_utils.RGBA_COLOR]):
         super(StagedCanvas, self).__init__(viewport, render_window, bg_color, stroke_color)
-        self.stage = ui_controllers.GmmMeshStage(opt, ['-1', '-1', '-1'], self, -1, ui_utils.ViewStyle((255, 255, 255),
-                                                                                                       (255, 255, 255), ui_utils.bg_target_color, 1))
+        self.stage = ui_controllers.GmmMeshStage(opt, ['-1', '-1', '-1'], self, -1,
+                                                 ui_utils.ViewStyle((255, 255, 255),
+                                                                    (255, 255, 255),
+                                                                    ui_utils.bg_target_color, 1))
 
 
 class RenderPop(StagedCanvas):
 
     def after_draw(self, changed: List[int], select: bool) -> bool:
-        changed = list(filter(lambda x: not self.stage.gmm[x].disabled and self.stage.gmm[x].included != select, changed))
+        changed = list(
+            filter(lambda x: not self.stage.gmm[x].disabled and self.stage.gmm[x].included != select,
+                   changed))
         for item in changed:
             self.stage.gmm[item].toggle_inclusion()
             self.source_stage.gmm[item].toggle_inclusion()
@@ -224,8 +234,10 @@ class RenderPop(StagedCanvas):
             self.button_minimize.GetRepresentation().SetState(1)
             self.change_viewport(self.max_viewport)
 
-    def __init__(self, opt, min_viewport:Tuple[float, float, float, float], max_viewport: Tuple[float, float, float, float],
-                 render_window: vtk.vtkRenderWindow, iren, bg_color: ui_utils.RGB_COLOR, stroke_color: ui_utils.RGBA_COLOR,
+    def __init__(self, opt, min_viewport: Tuple[float, float, float, float],
+                 max_viewport: Tuple[float, float, float, float],
+                 render_window: vtk.vtkRenderWindow, iren, bg_color: ui_utils.RGB_COLOR,
+                 stroke_color: ui_utils.RGBA_COLOR,
                  afetr_draw_callback: Callable[[ui_controllers.GmmMeshStage, List[int]], None]):
         super(RenderPop, self).__init__(opt, min_viewport, render_window, bg_color, stroke_color)
         self.afetr_draw_callback = afetr_draw_callback
@@ -233,7 +245,8 @@ class RenderPop(StagedCanvas):
         self.max_viewport = max_viewport
         self.render_window = render_window
         self.button_minimize = ui_utils.ImageButton(
-            [f'{constants.UI_RESOURCES}icons-14.png', f'{constants.UI_RESOURCES}icons-13.png'], iren, self, (0.015, 0.015),
+            [f'{constants.UI_RESOURCES}icons-14.png', f'{constants.UI_RESOURCES}icons-13.png'], iren, self,
+            (0.015, 0.015),
             (0.001, 0.8), on_click=self.toggle_win)
         self.source_stage: Optional[ui_controllers.GmmMeshStage] = None
         self.GetActiveCamera().SetPosition(0, 0, 4)
@@ -310,7 +323,9 @@ class RenderMain(StagedCanvas):
         return False
 
     def after_draw(self, changed: List[int], select: bool) -> bool:
-        changed = list(filter(lambda x: not self.stage.gmm[x].disabled and self.stage.gmm[x].is_selected != select, changed))
+        changed = list(
+            filter(lambda x: not self.stage.gmm[x].disabled and self.stage.gmm[x].is_selected != select,
+                   changed))
         for item in changed:
             self.stage.gmm[item].toggle_selection()
         return False
@@ -323,8 +338,10 @@ class RenderMain(StagedCanvas):
         if self.model_process is not None:
             self.model_process.exit()
 
-    def __init__(self, opt, viewport:Tuple[float, float, float, float], samples_root, render_window: vtk.vtkRenderWindow,
-                 bg_color: ui_utils.RGB_COLOR, stroke_color: Optional[ui_utils.RGBA_COLOR], with_model: bool):
+    def __init__(self, opt, viewport: Tuple[float, float, float, float], samples_root,
+                 render_window: vtk.vtkRenderWindow,
+                 bg_color: ui_utils.RGB_COLOR, stroke_color: Optional[ui_utils.RGBA_COLOR],
+                 with_model: bool):
         super(RenderMain, self).__init__(opt, viewport, render_window, bg_color, stroke_color)
         if with_model:
             self.model_process = inference_processing.InferenceProcess(opt, self.stage.replace_mesh,
@@ -344,7 +361,8 @@ class MeshScroller(vtk.vtkRenderer):
 
     def set_int_viewport(self, win_size) -> Tuple[int, int, int, int]:
         w, h = win_size
-        return int(self.viewport[0] * w), int(self.viewport[1] * h), int(self.viewport[2] * w), int(self.viewport[3] * h)
+        return int(self.viewport[0] * w), int(self.viewport[1] * h), int(self.viewport[2] * w), int(
+            self.viewport[3] * h)
 
     def set_camera(self):
         camera = self.GetActiveCamera()
@@ -356,7 +374,8 @@ class MeshScroller(vtk.vtkRenderer):
         self.viewport_ren = self.set_int_viewport(obj.GetSize())
 
     @staticmethod
-    def mesh_to_polydata(mesh: Union[T_Mesh, V_Mesh], source: Optional[vtk.vtkPolyData] = None) -> vtk.vtkPolyData:
+    def mesh_to_polydata(mesh: Union[T_Mesh, V_Mesh],
+                         source: Optional[vtk.vtkPolyData] = None) -> vtk.vtkPolyData:
         if source is None:
             source = vtk.vtkPolyData()
         vs, faces = mesh
@@ -405,7 +424,8 @@ class MeshScroller(vtk.vtkRenderer):
     def save(self, root: str, gmms):
         self.meshes.save(root, gmms)
 
-    def __init__(self, opt, viewport: Tuple[float, float, float, float], render_window: vtk.vtkRenderWindow, iren,
+    def __init__(self, opt, viewport: Tuple[float, float, float, float], render_window: vtk.vtkRenderWindow,
+                 iren,
                  bg_color: ui_utils.RGB_COLOR, samples_root: str):
         super(MeshScroller, self).__init__()
         self.iren = iren
@@ -423,17 +443,17 @@ class MeshScroller(vtk.vtkRenderer):
         self.cb = VtkTimerCallback(30, self.iren, self.GetActiveCamera(), self.end_scroll_callback)
         self.iren.AddObserver('TimerEvent', self.cb.execute)
         self.cb_stack = []
-        self.button_slide = ui_utils.ImageButton([f'{constants.UI_RESOURCES}icons-06.png'], iren, self, (0.05, 0.02),
+        self.button_slide = ui_utils.ImageButton([f'{constants.UI_RESOURCES}icons-06.png'], iren, self,
+                                                 (0.05, 0.02),
                                                  (0.001, 0.14), on_click=self.scroll)
 
 
 class InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
-
     class MouseStatus:
 
         def update(self, pos: Tuple[int, int], selected_view: int) -> bool:
             is_changed = selected_view != self.selected_view or (pos[0] - self.last_pos[0]) ** 2 > 4 and (
-                        pos[1] - self.last_pos[1]) ** 2 > 4
+                    pos[1] - self.last_pos[1]) ** 2 > 4
             self.selected_view = selected_view
             self.last_pos = pos
             return is_changed
@@ -464,8 +484,8 @@ class InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
                 self.edit_status = ui_utils.EditType.Pondering
             elif key in ('x', 'y', 'z'):
                 self.render_main.toggle_edit_direction({'x': ui_utils.EditDirection.X_Axis,
-                                                   'y': ui_utils.EditDirection.Y_Axis,
-                                                   'z': ui_utils.EditDirection.Z_Axis}[key])
+                                                        'y': ui_utils.EditDirection.Y_Axis,
+                                                        'z': ui_utils.EditDirection.Z_Axis}[key])
         if key == 'return' or key == 'kp_enter':
             gmms = self.render_main.stage.get_gmm()
             self.mesh_scroller.save(self.root, gmms)
@@ -612,9 +632,11 @@ class InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
             self.render_main.reset()
             self.interactor.Render()
 
-        button_pencil = ui_utils.ImageButton([f"{constants.UI_RESOURCES}icons-03.png", f"{constants.UI_RESOURCES}icons-04.png"],
-                                             interactor, self.render_main, (.08, .08), (0.01, 0.1), toggle_select_mode, full_size=(1., .85))
-        button_reset = ui_utils.ImageButton([f"{constants.UI_RESOURCES}icons-05.png"], interactor, self.render_main,
+        button_pencil = ui_utils.ImageButton(
+            [f"{constants.UI_RESOURCES}icons-03.png", f"{constants.UI_RESOURCES}icons-04.png"],
+            interactor, self.render_main, (.08, .08), (0.01, 0.1), toggle_select_mode, full_size=(1., .85))
+        button_reset = ui_utils.ImageButton([f"{constants.UI_RESOURCES}icons-05.png"], interactor,
+                                            self.render_main,
                                             (.08, .08), (0.01, 0.98), reset, full_size=(1., .85))
         return button_pencil, button_reset
 
@@ -655,7 +677,8 @@ class InteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
         self.AddObserver(vtk.vtkCommand.KeyPressEvent, self.on_key_press)
         self.AddObserver(vtk.vtkCommand.CharEvent, lambda _, __: None)
 
-    def __init__(self, opt: options.Options, mesh_scroller: MeshScroller, render_pop: RenderPop, render_main: RenderMain, interactor):
+    def __init__(self, opt: options.Options, mesh_scroller: MeshScroller, render_pop: RenderPop,
+                 render_main: RenderMain, interactor):
         super(InteractorStyle, self).__init__()
         self.mouse_status = self.MouseStatus()
         self.mesh_scroller = mesh_scroller
@@ -685,7 +708,8 @@ def run(model_tag, samples_dir, with_model: bool = True):
                                list(ui_utils.bg_target_color) + [200], with_model)
     mesh_scroller = MeshScroller(opt, (0., 0., 1., .15), render_window, interactor, ui_utils.bg_target_color,
                                  samples_root)
-    renderer_pop = RenderPop(opt, min_viewport, max_viewport, render_window, interactor, ui_utils.bg_stage_color,
+    renderer_pop = RenderPop(opt, min_viewport, max_viewport, render_window, interactor,
+                             ui_utils.bg_stage_color,
                              list(ui_utils.bg_source_color) + [200], renderer_main.update_gmm)
     render_window.Render()
     interactor.Initialize()

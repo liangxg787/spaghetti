@@ -1,9 +1,10 @@
+import functools
+
+import matplotlib.pyplot as plt
 import vtk
+
 from spaghetti.utils import files_utils
 from spaghetti.custom_types import *
-import functools
-import matplotlib.pyplot as plt
-
 
 bg_source_color = (152, 181, 234)
 bg_target_color = (250, 200, 152)
@@ -214,7 +215,6 @@ def create_vtk_image(path: str) -> vtk.vtkImageData:
 
 class ImageButton(vtk.vtkButtonWidget):
 
-
     def process_state_change_event(self, obj, event):
         print(f"end event {self.button_representation.GetState()}")
 
@@ -223,7 +223,7 @@ class ImageButton(vtk.vtkButtonWidget):
         pos_left, pos_top = int(w * self.position[0]), int(h * self.position[1])
         position_coords = [pos_left,
                            pos_left + int(w * self.size[0]),
-                           pos_top - int(h *self.size[1]),
+                           pos_top - int(h * self.size[1]),
                            pos_top,
                            0, 0]
         self.button_representation.PlaceWidget(position_coords)
@@ -334,7 +334,8 @@ class CanvasRender(vtk.vtkRenderer):
     def get_mid_points(self, pt: Tuple[int, int]) -> List[List[int]]:
         if self.last_point is None:
             return []
-        pt_a, pt_b = torch.tensor(pt, dtype=torch.float32), torch.tensor(self.last_point, dtype=torch.float32)
+        pt_a, pt_b = torch.tensor(pt, dtype=torch.float32), torch.tensor(self.last_point,
+                                                                         dtype=torch.float32)
         delta = pt_b - pt_a
         num_mids = max(int(delta.norm(2, 0).item() / 10), 2)
         # num_mids = 4
@@ -386,7 +387,8 @@ class CanvasRender(vtk.vtkRenderer):
 
     def set_int_viewport(self, win_size) -> Tuple[int, int, int, int]:
         w, h = win_size
-        return int(self.viewport[0] * w), int(self.viewport[1] * h), int(self.viewport[2] * w), int(self.viewport[3] * h)
+        return int(self.viewport[0] * w), int(self.viewport[1] * h), int(self.viewport[2] * w), int(
+            self.viewport[3] * h)
 
     def init_canvas(self):
         self.canvas.SetExtent(0, self.width, 0, self.height, 0, 0)
@@ -439,10 +441,6 @@ class CanvasRender(vtk.vtkRenderer):
         self.set_camera()
 
 
-
-
-
-
 def init_palettes(cmap='Spectral'):
     colors = {}
     color_map = plt.cm.get_cmap(cmap)
@@ -452,7 +450,8 @@ def init_palettes(cmap='Spectral'):
         if num_colors == 1:
             colors[num_colors] = torch.tensor([.45])
         if num_colors not in colors:
-            colors[num_colors] = torch.tensor([color_map(float(idx) / (num_colors - 1)) for idx in range(num_colors)])
+            colors[num_colors] = torch.tensor(
+                [color_map(float(idx) / (num_colors - 1)) for idx in range(num_colors)])
         return colors[num_colors]
 
     return get_palette

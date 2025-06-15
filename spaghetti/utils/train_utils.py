@@ -1,10 +1,11 @@
-from spaghetti.custom_types import *
-from tqdm import tqdm
-from spaghetti.utils import files_utils
 import os
+
+from tqdm import tqdm
+
+from spaghetti.custom_types import *
+from spaghetti.utils import files_utils
 from spaghetti import options, constants
-from spaghetti.models import models_utils
-from spaghetti.models import occ_gmm
+from spaghetti.models import models_utils, occ_gmm
 
 LI = Union[T, float, int]
 Models = {'spaghetti': occ_gmm.Spaghetti}
@@ -25,7 +26,7 @@ def model_factory(opt: options.Options, override_model: Optional[str], device: D
 
 def load_model(opt, device, suffix: str = '', override_model: Optional[str] = None) -> models_utils.Model:
     model_path = f'{opt.cp_folder}/model{"_" + suffix if suffix else ""}'
-    print('>'*9, 'model_path', model_path)
+    print('>' * 9, 'model_path', model_path)
     model = model_factory(opt, override_model, device)
     name = opt.model_name if override_model is None else override_model
     if os.path.isfile(model_path):
@@ -46,7 +47,6 @@ def save_model(model, path):
 
 def model_lc(opt: options.Options, override_model: Optional[str] = None) -> Tuple[
     occ_gmm.Spaghetti, options.Options]:
-
     def save_model(model_: models_utils.Model, suffix: str = ''):
         nonlocal already_init
         if override_model is not None and suffix == '':
@@ -97,7 +97,7 @@ class Logger:
             if 'counter' not in key:
                 aggregate_dictionary[key] = dictionary[key] / float(dictionary[f"{key}_counter"])
                 if parent_dictionary is not None:
-                    Logger.stash(parent_dictionary, (key,  aggregate_dictionary[key]))
+                    Logger.stash(parent_dictionary, (key, aggregate_dictionary[key]))
         return aggregate_dictionary
 
     @staticmethod
@@ -178,7 +178,7 @@ class LinearWarmupScheduler:
 
     def step(self):
         if not self.finished:
-            for group, lr in zip(self.optimizer.param_groups,  self.get_lr()):
+            for group, lr in zip(self.optimizer.param_groups, self.get_lr()):
                 group['lr'] = lr
             self.cur_iter += 1.
             self.finished = self.cur_iter > self.num_iters

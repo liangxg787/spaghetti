@@ -1,5 +1,7 @@
-import skimage.measure
 import time
+
+import skimage.measure
+
 from spaghetti.custom_types import *
 from spaghetti.utils.train_utils import Logger
 from spaghetti import constants
@@ -8,8 +10,10 @@ from spaghetti import constants
 def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], voxel_size: float) -> T_Mesh:
     numpy_3d_occ_tensor = pytorch_3d_occ_tensor.numpy()
     try:
-        marching_cubes = skimage.measure.marching_cubes if 'marching_cubes' in dir(skimage.measure) else skimage.measure.marching_cubes_lewiner
-        verts, faces, normals, values = marching_cubes(numpy_3d_occ_tensor, level=0.0, spacing=[voxel_size] * 3)
+        marching_cubes = skimage.measure.marching_cubes if 'marching_cubes' in dir(
+            skimage.measure) else skimage.measure.marching_cubes_lewiner
+        verts, faces, normals, values = marching_cubes(numpy_3d_occ_tensor, level=0.0,
+                                                       spacing=[voxel_size] * 3)
     except BaseException:
         print("mc failed")
         return None
@@ -21,7 +25,6 @@ def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], vox
 
 
 class MarchingCubesMeshing:
-
 
     def fill_samples(self, decoder, samples, device: Optional[D] = None) -> T:
         num_samples = samples.shape[1]
@@ -132,7 +135,8 @@ class MarchingCubesMeshing:
             print("meshing took: %f" % (end_b - start))
         return mesh_a
 
-    def __init__(self, device: D, max_batch: int = 64 ** 3, min_res: int = 64, scale: float = 1, verbose: bool = False):
+    def __init__(self, device: D, max_batch: int = 64 ** 3, min_res: int = 64, scale: float = 1,
+                 verbose: bool = False):
         self.device = device
         self.max_batch = 32 ** 3 if constants.IS_WINDOWS else max_batch
         self.min_res = min_res
@@ -141,7 +145,8 @@ class MarchingCubesMeshing:
         self.sample_cache = {}
 
 
-def create_mesh_old(decoder, res=256, max_batch=64 ** 3, scale=1, device=CPU, verbose=False, get_time: bool = False):
+def create_mesh_old(decoder, res=256, max_batch=64 ** 3, scale=1, device=CPU, verbose=False,
+                    get_time: bool = False):
     meshing = MarchingCubesMeshing(device, max_batch=max_batch, scale=scale, verbose=verbose)
     start = time.time()
 

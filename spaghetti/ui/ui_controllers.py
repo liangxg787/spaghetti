@@ -1,12 +1,11 @@
 from __future__ import annotations
 import vtk
 import vtk.util.numpy_support as numpy_support
+
 from spaghetti.custom_types import *
-from spaghetti.utils import rotation_utils, files_utils
-from spaghetti.utils import train_utils
+from spaghetti.utils import rotation_utils, files_utils, train_utils
 from spaghetti.models import gm_utils
-from spaghetti.ui import gaussian_status, inference_processing
-from spaghetti.ui import ui_utils
+from spaghetti.ui import ui_utils, gaussian_status, inference_processing
 from spaghetti import options, constants
 
 

@@ -1,11 +1,9 @@
 import abc
+
 from spaghetti.custom_types import *
-from spaghetti import options
-from spaghetti import constants
-from spaghetti.utils import myparse, mesh_utils, files_utils
-from spaghetti.utils import train_utils, mcubes_meshing
-from spaghetti.models import occ_loss
-from spaghetti.models import gm_utils, models_utils
+from spaghetti import options, constants
+from spaghetti.utils import myparse, mesh_utils, files_utils, train_utils, mcubes_meshing
+from spaghetti.models import occ_loss, gm_utils, models_utils
 from spaghetti.ui import occ_inference
 
 
@@ -55,7 +53,8 @@ class MeshSampler(Dataset):
             inside_points.append(inside_points_[~labels_inside])
             counter_inside += inside_points[-1].shape[0]
             if counter_inside < split_size:
-                inside_points_ = self.mesh_bb[0][None, :] + self.mesh_bb[1][None, :] * torch.rand(split_size, 3)
+                inside_points_ = self.mesh_bb[0][None, :] + self.mesh_bb[1][None, :] * torch.rand(split_size,
+                                                                                                  3)
                 labels_inside = self.get_labels(inside_points_)
             trial += 1
         inside_points = torch.cat(inside_points, dim=0)[:split_size]
@@ -139,7 +138,7 @@ class MeshProjectionMid(MeshProjection):
 
     def switch(self, item_a, item_b):
         return item_a if self.projection_type is ProjectionType.LowProjection else item_b
-    
+
     @property
     def loss_key(self):
         return self.switch('loss_gmm', 'loss_occ')
@@ -161,7 +160,9 @@ class MeshProjectionMid(MeshProjection):
         return loss_gmm + self.opt.reg_weight * loss_reg
 
     def train_iter_high(self, labels: T, samples_sdf: T, samples_gmm: T):
-        z_d = self.mid_embeddings(torch.zeros(1, device=self.device, dtype=torch.int64)).view(1, self.opt.num_gaussians, -1)
+        z_d = self.mid_embeddings(torch.zeros(1, device=self.device, dtype=torch.int64)).view(1,
+                                                                                              self.opt.num_gaussians,
+                                                                                              -1)
         out, gmms = self.model.forward_mid(samples_sdf, z_d)
         loss_occ = self.criterion(out, labels)
         loss_gmm = self.gmm_criterion(gmms, samples_gmm)
@@ -204,12 +205,14 @@ class MeshProjectionMid(MeshProjection):
         if (epoch + 1) % 20 == 0:
             self.scheduler.step()
             # if self.projection_type is ProjectionType.HighProjection:
-                # self.prune()
+            # self.prune()
         return False
 
     @models_utils.torch_no_grad
     def save_projection(self, res=256, verbose=False):
-        z_d = self.mid_embeddings(torch.zeros(1, device=self.device, dtype=torch.int64)).view(1, self.opt.num_gaussians, -1)
+        z_d = self.mid_embeddings(torch.zeros(1, device=self.device, dtype=torch.int64)).view(1,
+                                                                                              self.opt.num_gaussians,
+                                                                                              -1)
         zh_base, gmms = self.model.decomposition_control.forward_mid(z_d)
         zh, attn_b = self.model.merge_zh(zh_base, gmms)
         numbers = self.get_new_ids(self.folder_name, 1)
@@ -235,8 +238,9 @@ def main():
     for_parser = {'--model_name': {'default': 'chairs_large', 'type': str},
                   '--output_name': {'default': 'samples', 'type': str},
                   '--mesh_path': {'default': './assets/mesh/example.obj', 'type': str},
-                  '--source':  {'default': 'inversion', 'type': str, 'options': ('inversion', 'random', 'training')},
-                  '--num_samples':  {'default': 10, 'type': int, 'help': 'relevant for random or training'}}
+                  '--source': {'default': 'inversion', 'type': str,
+                               'options': ('inversion', 'random', 'training')},
+                  '--num_samples': {'default': 10, 'type': int, 'help': 'relevant for random or training'}}
     args = myparse.parse(for_parser)
     opt = options.Options(tag=args['model_name'])
 

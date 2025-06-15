@@ -1,6 +1,8 @@
-from spaghetti import constants
 import functools
+
 from scipy.spatial.transform.rotation import Rotation
+
+from spaghetti import constants
 from spaghetti.custom_types import *
 
 

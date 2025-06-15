@@ -1,10 +1,11 @@
 from __future__ import annotations
 import abc
-import vtk
-from spaghetti.custom_types import *
-from spaghetti.ui import ui_utils
-from spaghetti.ui import ui_controllers
 import colorsys
+
+import vtk
+
+from spaghetti.custom_types import *
+from spaghetti.ui import ui_utils, ui_controllers
 from spaghetti import options
 
 

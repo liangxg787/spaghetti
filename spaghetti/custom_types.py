@@ -1,10 +1,16 @@
 # import open3d
+from typing import Tuple, List, Union, Callable, Type, Iterator, Dict, Set, Optional, Any, Sized, Iterable
+from types import DynamicClassAttribute
+from enum import Enum, unique
+
 import numpy as np
 import torch
-from spaghetti.constants import DEBUG
-from typing import Tuple, List, Union, Optional
+import torch.nn as nn
+import torch.nn.functional as nnf
 import torch.optim.optimizer
 import torch.utils.data
+
+from spaghetti.constants import DEBUG
 
 if DEBUG:
     seed = 99

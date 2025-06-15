@@ -1,5 +1,7 @@
-from spaghetti.custom_types import *
 from abc import ABC
+import math
+
+from spaghetti.custom_types import *
 
 
 def torch_no_grad(func):
@@ -64,6 +66,7 @@ class SineLayer(nn.Module):
     From the siren repository
     https://colab.research.google.com/github/vsitzmann/siren/blob/master/explore_siren.ipynb
     """
+
     def __init__(self, in_features, out_features, bias=True,
                  is_first=False, omega_0=30):
         super().__init__()
@@ -134,4 +137,3 @@ def recursive_to(item, device):
     elif type(item) is tuple or type(item) is list:
         return [recursive_to(item[i], device) for i in range(len(item))]
     return item
-

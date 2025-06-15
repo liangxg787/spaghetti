@@ -1,11 +1,13 @@
 import os
-from spaghetti.custom_types import *
 import multiprocessing as mp
 from multiprocessing import synchronize
+import ctypes
+
+from spaghetti.custom_types import *
 from spaghetti import options, constants
 from spaghetti.ui.occ_inference import Inference
 from spaghetti.utils import files_utils
-import ctypes
+
 if constants.IS_WINDOWS or 'DISPLAY' in os.environ:
     from pynput.keyboard import Key, Controller
 else:

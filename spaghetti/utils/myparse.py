@@ -1,5 +1,7 @@
 import sys
 
+from spaghetti.custom_types import *
+
 
 # minimal argparse
 def parse(parse_dict: Dict[str, Dict[str, Any]]):

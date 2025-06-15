@@ -1,13 +1,15 @@
 import os
 import sys
-from spaghetti import constants as const
-import pickle
-from shutil import copyfile, move
-from spaghetti.custom_types import *
-from PIL import Image
 import time
 import json
+import pickle
+from shutil import copyfile, move
+
+from PIL import Image
 import matplotlib.pyplot as plt
+
+from spaghetti import constants as const
+from spaghetti.custom_types import *
 
 
 def image_to_display(img) -> ARRAY:
@@ -80,9 +82,7 @@ def remove_suffix(path: str, suffix: str) -> str:
 
 
 def path_init(suffix: str, path_arg_ind: int, is_save: bool):
-
     def wrapper(func):
-
         def do(*args, **kwargs):
             path = add_suffix(args[path_arg_ind], suffix)
             if is_save:
@@ -239,7 +239,7 @@ def collect(root: str, *suffix, prefix='') -> List[List[str]]:
     return paths
 
 
-def delete_all(root:str, *suffix: str):
+def delete_all(root: str, *suffix: str):
     if const.DEBUG:
         return
     paths = collect(root, *suffix)
@@ -269,7 +269,6 @@ def colors_to_colors(colors: COLORS, mesh: T_Mesh) -> T:
 
 def load_mesh(file_name: str, dtype: Union[type(T), type(V)] = T,
               device: D = CPU) -> Union[T_Mesh, V_Mesh, T, Tuple[T, List[List[int]]]]:
-
     def off_parser():
         header = None
 
@@ -467,6 +466,7 @@ def export_mesh(mesh: Union[V_Mesh, T_Mesh, T, Tuple[T, List[List[int]]]], file_
             for sphere_id in range(spheres.shape[0]):
                 f.write(f'\nsp {spheres[sphere_id].item():d}')
 
+
 @path_init('.ply', 1, True)
 def export_ply(mesh: T_Mesh, path: str, colors: T):
     colors = colors_to_colors(colors, mesh)
@@ -476,7 +476,7 @@ def export_ply(mesh: T_Mesh, path: str, colors: T):
     swap = vs[:, 1].clone()
     vs[:, 1] = vs[:, 2]
     vs[:, 2] = swap
-    min_cor, max_cor= vs.min(0)[0], vs.max(0)[0]
+    min_cor, max_cor = vs.min(0)[0], vs.max(0)[0]
     vs = vs - ((min_cor + max_cor) / 2)[None, :]
     vs = vs / vs.max()
     vs[:, 2] = vs[:, 2] - vs[:, 2].min()
