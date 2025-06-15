@@ -92,7 +92,7 @@ def make_representation(model_name, output_name, manifold_files_path):
 
 if __name__ == '__main__':
     model_name = 'chairs_large'
-    BASE_DIR = '../../../'
+    BASE_DIR = '../../'
 
     obj_file_path = BASE_DIR + '/dataset/03001627_10/1a6f615e8b1b5ae4dbbc9440457e303e/model_manifold.obj'
     output_name = BASE_DIR + '/output/03001627_10'
