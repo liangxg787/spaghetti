@@ -1,8 +1,9 @@
 import os
-import constants as const
+import sys
+from spaghetti import constants as const
 import pickle
 from shutil import copyfile, move
-from custom_types import *
+from spaghetti.custom_types import *
 from PIL import Image
 import time
 import json
@@ -149,6 +150,8 @@ def load_pickle(path: str):
     data = None
     if os.path.isfile(path):
         try:
+            options_path = os.path.join(const.PROJECT_ROOT, 'options.py')
+            sys.path.append(options_path)
             with open(path, 'rb') as f:
                 data = pickle.load(f)
         except ValueError:

@@ -1,8 +1,8 @@
 from __future__ import annotations
 import vtk
-from custom_types import *
-from ui import ui_utils
-import constants
+from spaghetti.custom_types import *
+from spaghetti.ui import ui_utils
+from spaghetti import constants
 import vtk.util.numpy_support as numpy_support
 
 

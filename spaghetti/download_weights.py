@@ -5,7 +5,7 @@ import uuid
 import hashlib
 import requests
 from tqdm import tqdm
-from utils import files_utils
+from spaghetti.utils import files_utils
 import zipfile
 
 # code adapted from https://github.com/royorel/StyleSDF/blob/main/download_models.py

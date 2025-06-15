@@ -1,9 +1,9 @@
 import sys
 import vtk
-from custom_types import *
-from ui import ui_utils
-from ui import interactors, ui_controllers
-import options
+from spaghetti.custom_types import *
+from spaghetti.ui import ui_utils
+from spaghetti.ui import ui_controllers, interactors
+from spaghetti import options
 
 
 def init_camera(*renders: vtk.vtkRenderer):

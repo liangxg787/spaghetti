@@ -1,11 +1,11 @@
 from __future__ import annotations
 import abc
 import vtk
-from custom_types import *
-from ui import ui_utils
-from ui import ui_controllers
+from spaghetti.custom_types import *
+from spaghetti.ui import ui_utils
+from spaghetti.ui import ui_controllers
 import colorsys
-import options
+from spaghetti import options
 
 
 class CustomTextWidget(vtk.vtkTextWidget):

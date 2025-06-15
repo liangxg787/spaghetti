@@ -1,7 +1,7 @@
-from options import Options
-from models import models_utils, transformer
-import constants
-from custom_types import *
+from spaghetti.options import Options
+from spaghetti.models import models_utils, transformer
+from spaghetti import constants
+from spaghetti.custom_types import *
 from torch import distributions
 import math
 

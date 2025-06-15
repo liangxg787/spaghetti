@@ -1,7 +1,7 @@
-import constants
+from spaghetti import constants
 import functools
 from scipy.spatial.transform.rotation import Rotation
-from custom_types import *
+from spaghetti.custom_types import *
 
 
 def quat_to_rot(q):
