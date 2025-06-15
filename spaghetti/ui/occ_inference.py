@@ -1,7 +1,7 @@
 from spaghetti.custom_types import *
 from spaghetti.options import Options
 from spaghetti.utils import mesh_utils, mcubes_meshing, train_utils, files_utils
-from spaghetti.models import Spaghetti
+from spaghetti.models.occ_gmm import Spaghetti
 from spaghetti.models import models_utils
 
 
