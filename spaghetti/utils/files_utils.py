@@ -3,6 +3,7 @@ from spaghetti import constants as const
 import pickle
 from shutil import copyfile, move
 from spaghetti.custom_types import *
+from spaghetti import options
 from PIL import Image
 import time
 import json
@@ -149,7 +150,6 @@ def load_pickle(path: str):
     data = None
     if os.path.isfile(path):
         try:
-            from spaghetti import options
             with open(path, 'rb') as f:
                 data = pickle.load(f)
         except ValueError:
