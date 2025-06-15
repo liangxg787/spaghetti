@@ -150,7 +150,7 @@ def load_pickle(path: str):
     data = None
     if os.path.isfile(path):
         try:
-            options_path = os.path.join(const.PROJECT_ROOT, 'options.py')
+            options_path = os.path.join(const.PROJECT_ROOT_ORIGINAL, 'options.py')
             sys.path.append(options_path)
             with open(path, 'rb') as f:
                 data = pickle.load(f)

@@ -6,9 +6,9 @@ get_trace = getattr(sys, 'gettrace', None)
 DEBUG = get_trace is not None and get_trace() is not None
 EPSILON = 1e-4
 DIM = 3
-PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
-if os.getenv('PROJECT_ROOT',  None):
-    PROJECT_ROOT = os.getenv('PROJECT_ROOT')
+PROJECT_ROOT_ORIGINAL = os.path.dirname(os.path.realpath(__file__))
+# if os.getenv('PROJECT_ROOT',  None):
+PROJECT_ROOT = os.getenv('PROJECT_ROOT')
 DATA_ROOT = f'{PROJECT_ROOT}/assets/'
 CHECKPOINTS_ROOT = f'{DATA_ROOT}checkpoints/'
 CACHE_ROOT = f'{DATA_ROOT}cache/'
