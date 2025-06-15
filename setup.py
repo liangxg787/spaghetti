@@ -25,6 +25,7 @@ setup(
     keywords='spaghetti',
     include_package_data=True,
     zip_safe=False,
+    package_dir={'': 'spaghetti'},
     packages=find_packages('spaghetti'),
     install_requires=[],
     entry_points={},

@@ -2,10 +2,10 @@ import abc
 from custom_types import *
 import options
 import constants
-from utils import train_utils, files_utils, mcubes_meshing, mesh_utils, myparse
+from spaghetti.utils import myparse, mesh_utils, mcubes_meshing, train_utils, files_utils
 from external.spaghetti.spaghetti.models import occ_loss
 from external.spaghetti.spaghetti.models import gm_utils, models_utils
-from ui import occ_inference
+from spaghetti.ui import occ_inference
 
 
 class MeshSampler(Dataset):

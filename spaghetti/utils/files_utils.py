@@ -1,8 +1,8 @@
 import os
-import constants as const
+from spaghetti import constants as const
 import pickle
 from shutil import copyfile, move
-from custom_types import *
+from spaghetti.custom_types import *
 from PIL import Image
 import time
 import json

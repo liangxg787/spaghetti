@@ -1,8 +1,8 @@
 from __future__ import annotations
 import vtk
-from custom_types import *
-from ui import ui_utils
-import constants
+from spaghetti.custom_types import *
+from spaghetti.ui import ui_utils
+from spaghetti import constants
 import vtk.util.numpy_support as numpy_support
 
 
@@ -271,7 +271,8 @@ class GaussianStatus(GaussianData):
     def apply_affine(self, button: ui_utils.Buttons, key: str):
         axis = {"left": 0, "right": 0, "up": 2, "down": 2, "a": 1, "z": 1}[key]
         sign = {"left": 1, "right": -1, "up": 1, "down": -1, "a": 1, "z": -1}[key]
-        if self.disabled or button not in (ui_utils.Buttons.translate, ui_utils.Buttons.stretch, ui_utils.Buttons.rotate):
+        if self.disabled or button not in (
+        ui_utils.Buttons.translate, ui_utils.Buttons.stretch, ui_utils.Buttons.rotate):
             return
         elif button is ui_utils.Buttons.translate:
             vec = np.zeros(3)

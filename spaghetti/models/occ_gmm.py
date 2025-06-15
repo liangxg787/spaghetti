@@ -1,10 +1,11 @@
-from options import Options
-from models import models_utils, transformer
-import constants
-from custom_types import *
+from spaghetti.options import Options
+from spaghetti.models import models_utils, transformer
+from spaghetti import constants
+from spaghetti.custom_types import *
 from torch import distributions
 import math
-from utils import files_utils
+from spaghetti.utils import files_utils
+
 
 def dot(x, y, dim=3):
     return torch.sum(x * y, dim=dim)
@@ -59,7 +60,7 @@ class DecompositionNetwork(nn.Module):
             self.to_zb = models_utils.MLP((opt.dim_h, *([2 * opt.dim_h] * opt.decomposition_num_layers), opt.dim_h))
         else:
             self.to_zb = transformer.Transformer(opt.dim_h, opt.num_heads, opt.num_layers, act=act,
-                                                       norm_layer=norm_layer)
+                                                 norm_layer=norm_layer)
 
 
 class OccupancyMlP(nn.Module):
@@ -298,7 +299,7 @@ class Spaghetti(models_utils.Model):
         self.from_gmm = nn.Linear(sum(self.decomposition_control.split_shape), opt.dim_h)
         if opt.use_encoder:
             self.mixing_network = transformer.Transformer(opt.dim_h, opt.num_heads, opt.num_layers,
-                                                              act=nnf.relu, norm_layer=nn.LayerNorm)
+                                                          act=nnf.relu, norm_layer=nn.LayerNorm)
         else:
             self.mixing_network = transformer.DummyTransformer()
         self.dist = None

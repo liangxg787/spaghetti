@@ -1,7 +1,7 @@
 import torch
 import vtk
-from utils import files_utils
-from custom_types import *
+from spaghetti.utils import files_utils
+from spaghetti.custom_types import *
 import functools
 import matplotlib.pyplot as plt
 

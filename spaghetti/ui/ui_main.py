@@ -1,8 +1,8 @@
 import sys
 import vtk
-from custom_types import *
-from ui import ui_utils, interactors, ui_controllers
-import options
+from spaghetti.custom_types import *
+from spaghetti.ui import ui_utils, ui_controllers, interactors
+from spaghetti import options
 
 
 def init_camera(*renders: vtk.vtkRenderer):
@@ -110,9 +110,10 @@ def main_mix(opt: options.Options, with_model: bool, *shape_num: int):
     ren_left.SetLayer(1)
     render_window.AddRenderer(background_renderer_a)
     render_window.AddRenderer(background_renderer_b)
-    rens_right = [ui_utils.CanvasRender((offset_left, i * right_height, 1., (i + 1) * right_height), render_window,
-                                        ui_utils.rgb_to_float(ui_utils.bg_target_color),
-                                        stroke_color=list(ui_utils.bg_source_color) + [200]) for i in range(num_shapes)]
+    rens_right = [
+        ui_utils.CanvasRender((offset_left, i * right_height, 1., (i + 1) * right_height), render_window,
+                              ui_utils.rgb_to_float(ui_utils.bg_target_color),
+                              stroke_color=list(ui_utils.bg_source_color) + [200]) for i in range(num_shapes)]
     gmm_united = ui_controllers.MeshGmmUnited(opt, list(shape_num), rens_right,
                                               ui_utils.get_view_styles(num_shapes + 1), ren_left, with_model)
     init_camera(ren_left, *rens_right)

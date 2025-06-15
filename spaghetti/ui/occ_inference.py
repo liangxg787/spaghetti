@@ -1,8 +1,8 @@
-from custom_types import *
-from options import Options
-from utils import train_utils, mcubes_meshing, files_utils, mesh_utils
-from models.occ_gmm import Spaghetti
-from models import models_utils
+from spaghetti.custom_types import *
+from spaghetti.options import Options
+from spaghetti.utils import mesh_utils, mcubes_meshing, train_utils, files_utils
+from spaghetti.models import Spaghetti
+from spaghetti.models import models_utils
 
 
 class Inference:

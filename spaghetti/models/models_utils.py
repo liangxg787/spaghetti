@@ -1,4 +1,4 @@
-from custom_types import *
+from spaghetti.custom_types import *
 from abc import ABC
 import math
 

@@ -1,10 +1,10 @@
 from __future__ import annotations
 import abc
 import vtk
-from custom_types import *
-from ui import ui_utils, ui_controllers
+from spaghetti.custom_types import *
+from spaghetti.ui import ui_utils, ui_controllers
 import colorsys
-import options
+from spaghetti import options
 
 
 class CustomTextWidget(vtk.vtkTextWidget):
@@ -248,13 +248,13 @@ class InteractorStyle(vtk.vtkInteractorStyleTrackballCamera, abc.ABC):
 
     def add_buttons(self, interactor):
         button_pencil = ui_utils.ImageButton(["../assets/ui_resources/icons-03.png", "../assets/ui_resources/icons-04.png"],
-                                                  ui_utils.bg_menu_color, interactor, (.1, .1), (0.24, 0.15),
-                                                  interactor.GetRenderWindow(), self.toggle_select_mode)
+                                             ui_utils.bg_menu_color, interactor, (.1, .1), (0.24, 0.15),
+                                             interactor.GetRenderWindow(), self.toggle_select_mode)
         button_symmetric = ui_utils.ImageButton(["../assets/ui_resources/icons-08.png", "../assets/ui_resources/icons-09.png"],
-                                                     ui_utils.bg_menu_color, interactor, (.1, .1), (0.3, 0.15),
-                                                     interactor.GetRenderWindow(), self.toggle_symmetric)
+                                                ui_utils.bg_menu_color, interactor, (.1, .1), (0.3, 0.15),
+                                                interactor.GetRenderWindow(), self.toggle_symmetric)
         button_reset = ui_utils.ImageButton(["../assets/ui_resources/icons-05.png"], ui_utils.bg_menu_color, interactor,
-                                                 (.1, .1), (0.35, .15), interactor.GetRenderWindow(), self.reset)
+                                            (.1, .1), (0.35, .15), interactor.GetRenderWindow(), self.reset)
         slider_widget, _ = ui_utils.make_slider(interactor, self.slider_event)
         return button_pencil, button_symmetric, button_reset, slider_widget
 

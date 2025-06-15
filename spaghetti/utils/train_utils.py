@@ -1,11 +1,9 @@
-from custom_types import *
-import constants
+from spaghetti.custom_types import *
 from tqdm import tqdm
-from utils import files_utils
+from spaghetti.utils import files_utils
 import os
-import options
-from models import models_utils, occ_gmm
-
+from spaghetti import options, constants
+from spaghetti.models import occ_gmm, models_utils
 
 LI = Union[T, float, int]
 Models = {'spaghetti': occ_gmm.Spaghetti}
@@ -44,7 +42,8 @@ def save_model(model, path):
     return True
 
 
-def model_lc(opt: options.Options, override_model: Optional[str] = None) -> Tuple[occ_gmm.Spaghetti, options.Options]:
+def model_lc(opt: options.Options, override_model: Optional[str] = None) -> Tuple[
+    occ_gmm.Spaghetti, options.Options]:
 
     def save_model(model_: models_utils.Model, suffix: str = ''):
         nonlocal already_init

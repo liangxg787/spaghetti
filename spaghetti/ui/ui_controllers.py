@@ -1,12 +1,12 @@
 from __future__ import annotations
-import constants
 import vtk
 import vtk.util.numpy_support as numpy_support
-from custom_types import *
-from utils import files_utils, rotation_utils
-from models import gm_utils
-from ui import ui_utils, inference_processing, gaussian_status
-import options
+from spaghetti.custom_types import *
+from spaghetti.utils import rotation_utils, train_utils, files_utils
+from spaghetti.models import gm_utils
+from spaghetti.ui import gaussian_status
+from spaghetti.ui import ui_utils, inference_processing
+from spaghetti import options, constants
 
 
 def filter_by_inclusion(gaussian: gaussian_status.GaussianStatus) -> bool:
@@ -58,7 +58,8 @@ class GmmMeshStage:
         #     self.arrows.turn_off()
         return True
 
-    def toggle_inclusion_by_id(self, g_id: int, select: Optional[bool] = None) -> Tuple[bool, List[gaussian_status.GaussianStatus]]:
+    def toggle_inclusion_by_id(self, g_id: int, select: Optional[bool] = None) -> Tuple[bool, List[
+        gaussian_status.GaussianStatus]]:
         toggled = []
         self.gmm[g_id].toggle_inclusion(select)
         toggled.append(self.gmm[g_id])
@@ -181,7 +182,8 @@ class GmmMeshStage:
         mapper[vs_inds] = torch.arange(vs.shape[0])
         return (vs, mapper[faces]), faces_inds[mask]
 
-    def save(self, root: str, filter_faces: Callable[[gaussian_status.GaussianStatus], bool] = filter_by_inclusion):
+    def save(self, root: str, filter_faces: Callable[[
+        gaussian_status.GaussianStatus], bool] = filter_by_inclusion):
         if self.faces is not None:
             if self.gmm_id == -1:
                 name = "mix"
@@ -364,7 +366,7 @@ class GmmMeshStage:
         self.offset = render_number
         # self.arrows = arrows.ArrowManger(render)
         if self.shape_id != '-1':
-            self.base_mesh = files_utils.load_mesh( ''.join(shape_path))
+            self.base_mesh = files_utils.load_mesh(''.join(shape_path))
             self.raw_gmm = files_utils.load_gmm(f'{shape_path[0]}/{shape_path[1]}.txt', as_np=True)[:-1]
         else:
             self.base_mesh = None
@@ -438,7 +440,8 @@ class GmmStatuses:
                 return gmm
         return None
 
-    def __init__(self, opt: options.Options, shape_paths: List[List[str]], render, view_styles: List[ui_utils.ViewStyle]):
+    def __init__(self, opt: options.Options, shape_paths: List[List[str]], render, view_styles: List[
+        ui_utils.ViewStyle]):
         self.gmms = [GmmMeshStage(opt, shape_path, render, i, view_style) for i, (shape_path, view_style) in
                      enumerate(zip(shape_paths, view_styles))]
 
@@ -635,7 +638,8 @@ class MeshGmmStatuses(GmmStatuses):
             is_changed = True
         return is_changed
 
-    def __init__(self, opt: options.Options, shape_paths: List[List[str]], render, view_styles: List[ui_utils.ViewStyle],
+    def __init__(self, opt: options.Options, shape_paths: List[List[str]], render, view_styles: List[
+        ui_utils.ViewStyle],
                  with_model: bool):
         super(MeshGmmStatuses, self).__init__(opt, shape_paths, render, view_styles)
         if with_model:
@@ -720,7 +724,8 @@ class MeshGmmUnited(MeshGmmStatuses):
     def main_stage(self) -> GmmMeshStage:
         return self.main_gmm_
 
-    def __init__(self, opt: options.Options, gmm_paths: List[int], renders_right, view_styles: List[ui_utils.ViewStyle],
+    def __init__(self, opt: options.Options, gmm_paths: List[int], renders_right, view_styles: List[
+        ui_utils.ViewStyle],
                  main_render: ui_utils.CanvasRender, with_model: bool):
         self.main_gmm_ = GmmMeshStage(opt, -1, main_render, len(gmm_paths), view_styles[-1], to_init=False)
         super(MeshGmmUnited, self).__init__(opt, gmm_paths, renders_right, view_styles[:-1], with_model)
@@ -754,5 +759,4 @@ def main():
 
 if __name__ == '__main__':
 
-    from utils import train_utils
     exit(main())
