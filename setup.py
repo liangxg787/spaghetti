@@ -25,8 +25,7 @@ setup(
     keywords='spaghetti',
     include_package_data=True,
     zip_safe=False,
-    package_dir={'': 'spaghetti'},
-    packages=find_packages('spaghetti'),
+    packages=['spaghetti', 'spaghetti.models', 'spaghetti.ui', 'spaghetti.utils'],
     install_requires=[],
     entry_points={},
     classifiers=[
