@@ -1,6 +1,8 @@
 
 ### <a href="https://amirhertz.github.io/spaghetti">SPAGHETTI: Editing Implicit Shapes through Part Aware Generation</a>
 
+**This repository is refactored for being used to install in customized project after forking from original repository.**
+
 ![](spaghetti/assets/readme_resources/teaser-01.png)
 
 
