@@ -30,7 +30,9 @@ def load_model(opt, device, suffix: str = '', override_model: Optional[str] = No
     model = model_factory(opt, override_model, device)
     name = opt.model_name if override_model is None else override_model
     if os.path.isfile(model_path):
-        logger.info('>' * 9, f'loading {name} model from {model_path}')
+        logger.info('*' * 30)
+        logger.info(f'loading {name} model from {model_path}')
+        logger.info('*' * 30)
         model.load_state_dict(torch.load(model_path, map_location=device))
     else:
         logger.info(f'init {name} model')
