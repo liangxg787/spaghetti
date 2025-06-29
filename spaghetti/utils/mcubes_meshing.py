@@ -14,8 +14,8 @@ def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], vox
             skimage.measure) else skimage.measure.marching_cubes_lewiner
         verts, faces, normals, values = marching_cubes(numpy_3d_occ_tensor, level=0.0,
                                                        spacing=[voxel_size] * 3)
-    except BaseException:
-        print("mc failed")
+    except BaseException as e:
+        print(f"Marching cube failed: {e}")
         return None
     mesh_points = np.zeros_like(verts)
     mesh_points[:, 0] = voxel_grid_origin[0] + verts[:, 0]
