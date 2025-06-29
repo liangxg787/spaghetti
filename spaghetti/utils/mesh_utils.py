@@ -6,6 +6,7 @@ import igl
 from spaghetti.custom_types import *
 from spaghetti.constants import EPSILON
 from spaghetti.custom_types import T_Mesh, TS
+from spaghetti.utils.log_config import logger
 
 
 def scale_all(*values: T):
@@ -432,7 +433,7 @@ def align_mesh(mesh: T_Mesh, ref_vs: T) -> T_Mesh:
     dist, mapping_id = dist_mat.min(1)
     vs_select = dist_mat.min(0)[1]
     if mapping_id.unique().shape[0] != vs.shape[0]:
-        print('\n\033[91mWarning, alignment is not bijective\033[0m')
+        logger.info('\n\033[91mWarning, alignment is not bijective\033[0m')
     vs_aligned = vs[vs_select]
     faces_aligned = mapping_id[faces]
     return vs_aligned, faces_aligned

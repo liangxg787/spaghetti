@@ -7,6 +7,7 @@ import vtk
 from spaghetti.custom_types import *
 from spaghetti.ui import ui_utils, ui_controllers
 from spaghetti import options
+from spaghetti.utils.log_config import logger
 
 
 class CustomTextWidget(vtk.vtkTextWidget):
@@ -31,7 +32,7 @@ class CustomTextWidget(vtk.vtkTextWidget):
         self.on_click(self)
 
     def hover(self, obj, event):
-        print(self.b_type.value)
+        logger.info(self.b_type.value)
 
     def toggle_selection(self):
         if self.on:

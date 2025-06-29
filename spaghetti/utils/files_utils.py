@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 
 from spaghetti import constants as const
 from spaghetti.custom_types import *
+from spaghetti.utils.log_config import logger
 
 
 def image_to_display(img) -> ARRAY:
@@ -103,7 +104,7 @@ def copy_file(src: str, dest: str, force=False):
             copyfile(src, dest)
             return True
         else:
-            print("Destination file already exist. To override, set force=True")
+            logger.info("Destination file already exist. To override, set force=True")
     return False
 
 
@@ -224,7 +225,7 @@ def collect(root: str, *suffix, prefix='') -> List[List[str]]:
         paths = []
         root = add_suffix(root, '/')
         if not os.path.isdir(root):
-            print(f'Warning: trying to collect from {root} but dir isn\'t exist')
+            logger.info(f'Warning: trying to collect from {root} but dir isn\'t exist')
         else:
             p_len = len(prefix)
             for path, _, files in os.walk(root):
@@ -344,7 +345,7 @@ def load_mesh(file_name: str, dtype: Union[type(T), type(V)] = T,
     else:
         raise ValueError(f'mesh file {file_name} is not exist or not supported')
     if type(mesh[1]) is T and not ((mesh[1] >= 0) * (mesh[1] < mesh[0].shape[0])).all():
-        print(f"err: {file_name}")
+        logger.info(f"err: {file_name}")
     assert type(mesh[1]) is not T or ((mesh[1] >= 0) * (mesh[1] < mesh[0].shape[0])).all()
     if dtype is V:
         mesh = mesh[0].numpy(), mesh[1].numpy()
@@ -517,9 +518,9 @@ def load_model(model: Union[Optimizer, nn.Module], model_path: str, device: D, v
     if os.path.isfile(model_path):
         model.load_state_dict(torch.load(model_path, map_location=device))
         if verbose:
-            print(f'loading {type(model).__name__} from {model_path}')
+            logger.info(f'loading {type(model).__name__} from {model_path}')
     elif verbose:
-        print(f'init {type(model).__name__}')
+        logger.info(f'init {type(model).__name__}')
     return model
 
 
@@ -529,7 +530,7 @@ def measure_time(func, num_iters: int, *args):
         func(*args)
     total_time = time.time() - start_time
     avg_time = total_time / num_iters
-    print(f"{str(func).split()[1].split('.')[-1]} total time: {total_time}, average time: {avg_time}")
+    logger.info(f"{str(func).split()[1].split('.')[-1]} total time: {total_time}, average time: {avg_time}")
 
 
 def get_time_name(name: str, format_="%m_%d-%H_%M") -> str:

@@ -6,6 +6,7 @@ from spaghetti.custom_types import *
 from spaghetti.utils import files_utils
 from spaghetti import options, constants
 from spaghetti.models import models_utils, occ_gmm
+from spaghetti.utils.log_config import logger
 
 LI = Union[T, float, int]
 Models = {'spaghetti': occ_gmm.Spaghetti}
@@ -29,17 +30,17 @@ def load_model(opt, device, suffix: str = '', override_model: Optional[str] = No
     model = model_factory(opt, override_model, device)
     name = opt.model_name if override_model is None else override_model
     if os.path.isfile(model_path):
-        print('>' * 9, f'loading {name} model from {model_path}')
+        logger.info('>' * 9, f'loading {name} model from {model_path}')
         model.load_state_dict(torch.load(model_path, map_location=device))
     else:
-        print(f'init {name} model')
+        logger.info(f'init {name} model')
     return model
 
 
 def save_model(model, path):
     if constants.DEBUG:
         return False
-    print(f'saving model in {path}')
+    logger.info(f'saving model in {path}')
     torch.save(model.state_dict(), path)
     return True
 
@@ -58,11 +59,11 @@ def model_lc(opt: options.Options, override_model: Optional[str] = None) -> Tupl
             files_utils.save_pickle(opt, params_path)
             already_init = True
         if is_model_clean(model_):
-            print(f'saving {opt.model_name} model at {model_path}')
+            logger.info(f'saving {opt.model_name} model at {model_path}')
             torch.save(model_.state_dict(), model_path)
         elif os.path.isfile(model_path):
-            print(f'model is corrupted')
-            print(f'loading {opt.model_name} model from {model_path}')
+            logger.info(f'model is corrupted')
+            logger.info(f'loading {opt.model_name} model from {model_path}')
             model.load_state_dict(torch.load(model_path, map_location=opt.device))
         return True
 

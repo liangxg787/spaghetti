@@ -5,6 +5,7 @@ import skimage.measure
 from spaghetti.custom_types import *
 from spaghetti.utils.train_utils import Logger
 from spaghetti import constants
+from spaghetti.utils.log_config import logger
 
 
 def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], voxel_size: float) -> T_Mesh:
@@ -15,7 +16,7 @@ def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], vox
         verts, faces, normals, values = marching_cubes(numpy_3d_occ_tensor, level=0.0,
                                                        spacing=[voxel_size] * 3)
     except BaseException as e:
-        print(f"Marching cube failed: {e}")
+        logger.error(f"Marching cube failed: {e}")
         return None
     mesh_points = np.zeros_like(verts)
     mesh_points[:, 0] = voxel_grid_origin[0] + verts[:, 0]
@@ -31,8 +32,8 @@ class MarchingCubesMeshing:
         num_iters = num_samples // self.max_batch + int(num_samples % self.max_batch != 0)
         sample_coords = samples[:3]
         if self.verbose:
-            logger = Logger()
-            logger.start(num_iters, tag='meshing')
+            logger_interation = Logger()
+            logger_interation.start(num_iters, tag='meshing')
         for i in range(num_iters):
             sample_subset = sample_coords[:, i * self.max_batch: min((i + 1) * self.max_batch, num_samples)]
             if device is not None:
@@ -42,9 +43,9 @@ class MarchingCubesMeshing:
                 decoder(sample_subset * self.scale).squeeze().detach()
             )
             if self.verbose:
-                logger.reset_iter()
+                logger_interation.reset_iter()
         if self.verbose:
-            logger.stop()
+            logger_interation.stop()
         return samples
 
     def fill_recursive(self, decoder, samples: T, stride: int, base_res: int, depth: int) -> T:
@@ -122,7 +123,7 @@ class MarchingCubesMeshing:
         occ_values = self.get_grid(decoder, res)
         if verbose:
             end = time.time()
-            print("sampling took: %f" % (end - start))
+            logger.info("sampling took: %f" % (end - start))
             if get_time:
                 return end - start
 
@@ -131,8 +132,8 @@ class MarchingCubesMeshing:
 
         if verbose:
             end_b = time.time()
-            print("mcube took: %f" % (end_b - end))
-            print("meshing took: %f" % (end_b - start))
+            logger.info("mcube took: %f" % (end_b - end))
+            logger.info("meshing took: %f" % (end_b - start))
         return mesh_a
 
     def __init__(self, device: D, max_batch: int = 64 ** 3, min_res: int = 64, scale: float = 1,
@@ -174,7 +175,7 @@ def create_mesh_old(decoder, res=256, max_batch=64 ** 3, scale=1, device=CPU, ve
     sdf_values = sdf_values.reshape(res, res, res)
 
     end = time.time()
-    print("sampling took: %f" % (end - start))
+    logger.info("sampling took: %f" % (end - start))
     if get_time:
         return end - start
     return mcubes_skimage(

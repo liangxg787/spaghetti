@@ -5,6 +5,7 @@ import vtk
 
 from spaghetti.utils import files_utils
 from spaghetti.custom_types import *
+from spaghetti.utils.log_config import logger
 
 bg_source_color = (152, 181, 234)
 bg_target_color = (250, 200, 152)
@@ -216,7 +217,7 @@ def create_vtk_image(path: str) -> vtk.vtkImageData:
 class ImageButton(vtk.vtkButtonWidget):
 
     def process_state_change_event(self, obj, event):
-        print(f"end event {self.button_representation.GetState()}")
+        logger.info(f"end event {self.button_representation.GetState()}")
 
     def set_size(self, window_size: Tuple[float, float]):
         w, h = window_size[0] * self.full_size[0], window_size[1] * self.full_size[1]

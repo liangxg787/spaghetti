@@ -3,6 +3,7 @@ from spaghetti.options import Options
 from spaghetti.utils import files_utils, train_utils, mcubes_meshing
 from spaghetti.models.occ_gmm import Spaghetti
 from spaghetti.models import models_utils
+from spaghetti.utils.log_config import logger
 
 
 class Inference:
@@ -36,7 +37,7 @@ class Inference:
                 if gmms is not None:
                     files_utils.export_gmm(gmms, i, f'{self.opt.cp_folder}/{folder_name}/occ/{name}')
             if verbose:
-                print(f'done {i + 1:d}/{len(z):d}')
+                logger.info(f'done {i + 1:d}/{len(z):d}')
 
     def load_file(self, info_path, disclude: Optional[List[int]] = None):
         info = files_utils.load_pickle(''.join(info_path))
@@ -133,10 +134,10 @@ class Inference:
 
     @models_utils.torch_no_grad
     def plot_folder(self, *folders, res: int = 256):
-        logger = train_utils.Logger()
+        logger_interation = train_utils.Logger()
         for folder in folders:
             paths = files_utils.collect(folder, '.pkl')
-            logger.start(len(paths))
+            logger_interation.start(len(paths))
             for path in paths:
                 name = path[1]
                 out_path = f"{self.opt.cp_folder}/from_ui/{name}"
@@ -144,8 +145,8 @@ class Inference:
                 if mesh is not None:
                     files_utils.export_mesh(mesh, out_path)
                     files_utils.export_list(colors.tolist(), f"{out_path}_faces")
-                logger.reset_iter()
-            logger.stop()
+                logger_interation.reset_iter()
+            logger_interation.stop()
 
     def get_zh_from_idx(self, items: T):
         zh, _, gmms, __ = self.model.get_embeddings(items.to(self.device))

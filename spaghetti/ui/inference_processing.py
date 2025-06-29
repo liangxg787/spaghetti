@@ -7,6 +7,7 @@ from spaghetti.custom_types import *
 from spaghetti import options, constants
 from spaghetti.ui.occ_inference import Inference
 from spaghetti.utils import files_utils
+from spaghetti.utils.log_config import logger
 
 if constants.IS_WINDOWS or 'DISPLAY' in os.environ:
     from pynput.keyboard import Key, Controller
@@ -34,7 +35,7 @@ def value_neq(value: mp.Value, status: UiStatus) -> bool:
 def set_value(value: mp.Value, status: UiStatus):
     with value.get_lock():
         value.value = status.value
-    print({0: 'Waiting', 1: 'GetMesh', 2: 'SetGMM', 3: 'SetMesh', 4: 'ReplaceMesh', 5: 'Exit'}[status.value])
+    logger.info({0: 'Waiting', 1: 'GetMesh', 2: 'SetGMM', 3: 'SetMesh', 4: 'ReplaceMesh', 5: 'Exit'}[status.value])
 
 
 def set_value_if_eq(value: mp.Value, status: UiStatus, check: UiStatus):

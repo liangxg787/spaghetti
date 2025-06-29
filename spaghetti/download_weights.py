@@ -9,6 +9,7 @@ from tqdm import tqdm
 import zipfile
 
 from spaghetti.utils import files_utils
+from spaghetti.utils.log_config import logger
 
 
 # code adapted from https://github.com/royorel/StyleSDF/blob/main/download_models.py
@@ -80,14 +81,14 @@ def download_pretrained_models():
                            'model_name': 'spaghetti_airplanes'}
 
     info = spaghetti_airplanes
-    print(f'Downloading {info["model_name"]}')
+    logger.info(f'Downloading {info["model_name"]}')
     zip_file_path = f'{info["save_path"]}/{info["zip_file_name"]}'
     with requests.Session() as session:
         download_file(session, info)
     with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
         zip_ref.extractall(info["save_path"])
     files_utils.delete_single(zip_file_path)
-    print('Done!')
+    logger.info('Done!')
 
 
 

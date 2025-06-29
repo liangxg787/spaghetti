@@ -4,6 +4,7 @@ import pickle
 
 from spaghetti import constants as const
 from spaghetti.custom_types import *
+from spaghetti.utils.log_config import logger
 
 
 class Options:
@@ -11,7 +12,7 @@ class Options:
     def load(self):
         device = self.device
         if os.path.isfile(self.save_path):
-            print(f'loading opitons from {self.save_path}')
+            logger.info(f'loading opitons from {self.save_path}')
             with open(self.save_path, 'rb') as f:
                 options = pickle.load(f)
             options.device = device
