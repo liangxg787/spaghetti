@@ -1,6 +1,10 @@
 import os
 import sys
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 IS_WINDOWS = sys.platform == 'win32'
 get_trace = getattr(sys, 'gettrace', None)
 DEBUG = get_trace is not None and get_trace() is not None
