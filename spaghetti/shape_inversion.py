@@ -220,12 +220,14 @@ class MeshProjectionMid(MeshProjection):
 
     def invert(self, num_epochs: int):
         for i in range(num_epochs // 2):
-            if self.early_stop(self.train_epoch(i), i):
-                break
+            self.train_epoch(i)
+            # if self.early_stop(self.train_epoch(i), i):
+            #     break
         self.switch_embedding()
         for i in range(num_epochs):
-            if self.early_stop(self.train_epoch(i), i):
-                break
+            self.train_epoch(i)
+            # if self.early_stop(self.train_epoch(i), i):
+            #     break
         self.save_projection()
 
     def __init__(self, opt: options.Options, mesh_path: str, folder_out: str):
