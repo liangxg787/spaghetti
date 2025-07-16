@@ -205,6 +205,8 @@ class MeshProjectionMid(MeshProjection):
             if self.stop_times:
                 if epoch - self.stop_times[-1] == 1:
                     self.stop_times.append(epoch)
+                else:
+                    self.stop_times = []
             else:
                 self.stop_times.append(epoch)
             if len(self.stop_times) > 100:
