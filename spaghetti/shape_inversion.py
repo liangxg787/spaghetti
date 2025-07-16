@@ -121,7 +121,7 @@ class MeshProjection(occ_inference.Inference, abc.ABC):
         optimizer = Optimizer(embeddings_wrap.parameters(), lr=1e-7)
         return embeddings_wrap, optimizer
 
-    def __init__(self, opt: options.Options, mesh_path: str, folder_out, num_epochs: int):
+    def __init__(self, opt: options.Options, mesh_path: str, folder_out):
         super(MeshProjection, self).__init__(opt)
         self.opt = opt.load()
         self.logger = train_utils.Logger()
@@ -129,8 +129,7 @@ class MeshProjection(occ_inference.Inference, abc.ABC):
         self.embeddings, self.optimizer = self.init_embeddings()
         self.warm_up_scheduler = train_utils.LinearWarmupScheduler(self.optimizer, 1e-3, 100)
         # self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
-        self.scheduler = OneCycleLR(self.optimizer, max_lr=1e-1, steps_per_epoch=len(self.dl),
-                                    epochs=num_epochs)
+        self.scheduler = OneCycleLR(self.optimizer, max_lr=1e-1, steps_per_epoch=len(self.dl))
         self.last_loss = 1000000
         self.meshing = mcubes_meshing.MarchingCubesMeshing(self.device, scale=1, min_res=200)
         self.criterion = occ_loss.occupancy_bce
@@ -197,8 +196,7 @@ class MeshProjectionMid(MeshProjection):
         self.optimizer = Optimizer(self.mid_embeddings.parameters(), lr=1e-7)
         # self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
         self.warm_up_scheduler = train_utils.LinearWarmupScheduler(self.optimizer, 1e-3, 100)
-        self.scheduler = OneCycleLR(self.optimizer, max_lr=1e-1, steps_per_epoch=len(self.dl),
-                                    epochs=self.num_epochs)
+        self.scheduler = OneCycleLR(self.optimizer, max_lr=1e-1, steps_per_epoch=len(self.dl))
 
     def early_stop(self, log, epoch) -> bool:
         loss = log[self.loss_key]
@@ -235,22 +233,21 @@ class MeshProjectionMid(MeshProjection):
         numbers = self.get_new_ids(self.folder_name, 1)
         self.plot_occ(zh, zh_base, gmms, numbers, self.folder_name, verbose=verbose, res=res)
 
-    def invert(self):
-        for i in range(self.num_epochs // 2):
+    def invert(self, num_epochs: int):
+        for i in range(num_epochs // 2):
             if self.early_stop(self.train_epoch(i), i):
                 break
         self.switch_embedding()
-        for i in range(self.num_epochs):
+        for i in range(num_epochs):
             if self.early_stop(self.train_epoch(i), i):
                 break
         self.save_projection()
 
-    def __init__(self, opt: options.Options, mesh_path: str, folder_out: str, num_epochs: int):
+    def __init__(self, opt: options.Options, mesh_path: str, folder_out: str):
         self.projection_type = ProjectionType.LowProjection
-        super(MeshProjectionMid, self).__init__(opt, mesh_path, folder_out, num_epochs)
+        super(MeshProjectionMid, self).__init__(opt, mesh_path, folder_out)
         self.mid_embeddings = nn.Embedding(1, self.opt.num_gaussians * self.opt.dim_h).to(self.device)
         self.stop_times = []
-        self.num_epochs = num_epochs
 
 
 def main():
