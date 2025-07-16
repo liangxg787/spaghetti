@@ -118,7 +118,7 @@ class MeshProjection(occ_inference.Inference, abc.ABC):
         embeddings = self.model.get_random_embeddings(1)
         embeddings_wrap = nn.Embedding(1, embeddings.shape[1]).to(self.device)
         embeddings_wrap.weight.data = embeddings.data
-        optimizer = Optimizer(embeddings_wrap.parameters(), lr=1e-7)
+        optimizer = Optimizer(embeddings_wrap.parameters(), lr=1e-7, weight_decay=1e-5)
         return embeddings_wrap, optimizer
 
     def __init__(self, opt: options.Options, mesh_path: str, folder_out):
@@ -129,7 +129,7 @@ class MeshProjection(occ_inference.Inference, abc.ABC):
         self.embeddings, self.optimizer = self.init_embeddings()
         self.warm_up_scheduler = train_utils.LinearWarmupScheduler(self.optimizer, 1e-3, 100)
         # self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
-        self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=0.5, patience=3)
+        self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=0.1, patience=5, verbose=True)
         self.last_loss = 1000000
         self.meshing = mcubes_meshing.MarchingCubesMeshing(self.device, scale=1, min_res=200)
         self.criterion = occ_loss.occupancy_bce
@@ -193,10 +193,10 @@ class MeshProjectionMid(MeshProjection):
         mid_embedding[item] = zs.reshape(1, -1).detach()
         self.mid_embeddings.weight.data = mid_embedding
         self.last_loss = 123454321.
-        self.optimizer = Optimizer(self.mid_embeddings.parameters(), lr=1e-7)
+        self.optimizer = Optimizer(self.mid_embeddings.parameters(), lr=1e-7, weight_decay=1e-5)
         # self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
         self.warm_up_scheduler = train_utils.LinearWarmupScheduler(self.optimizer, 1e-3, 100)
-        self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=0.5, patience=3)
+        self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=0.1, patience=5, verbose=True)
 
     def early_stop(self, log, epoch) -> bool:
         loss = log[self.loss_key]
