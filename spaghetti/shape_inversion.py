@@ -129,8 +129,6 @@ class MeshProjection(occ_inference.Inference, abc.ABC):
         self.embeddings, self.optimizer = self.init_embeddings()
         self.warm_up_scheduler = train_utils.LinearWarmupScheduler(self.optimizer, 1e-3, 100)
         # self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
-        # self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=0.1, patience=5, verbose=True,
-        #                                    min_lr=1e-8)
         self.scheduler = CosineAnnealingLR(
             self.optimizer, T_max=3000 - 100, eta_min=1e-6
         )
@@ -200,18 +198,9 @@ class MeshProjectionMid(MeshProjection):
         self.optimizer = Optimizer(self.mid_embeddings.parameters(), lr=1e-7, weight_decay=1e-5)
         # self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
         self.warm_up_scheduler = train_utils.LinearWarmupScheduler(self.optimizer, 1e-3, 100)
-        # self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=0.1, patience=5, verbose=True,
-        #                                    min_lr=1e-8)
         self.scheduler = CosineAnnealingLR(
             self.optimizer, T_max=3000 - 100, eta_min=1e-6
         )
-        # self.scheduler = OneCycleLR(
-        #     optimizer,
-        #     max_lr=0.1,  # Peak LR (start higher than initial)
-        #     total_steps=epochs * len(train_loader),  # Total training steps
-        #     pct_start=0.3,  # 30% of steps for warmup
-        #     anneal_strategy='cos'  # Cosine annealing after warmup
-        # )
 
     def early_stop(self, log, epoch) -> bool:
         loss = log[self.loss_key]
