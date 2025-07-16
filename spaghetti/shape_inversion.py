@@ -218,7 +218,7 @@ class MeshProjectionMid(MeshProjection):
                 return True
         self.last_loss = loss
         if (epoch + 1) % 20 == 0:
-            self.scheduler.step()
+            self.scheduler.step(self.last_loss)
             # if self.projection_type is ProjectionType.HighProjection:
             # self.prune()
         return False
