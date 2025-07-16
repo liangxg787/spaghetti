@@ -196,11 +196,15 @@ class MeshProjectionMid(MeshProjection):
 
     def early_stop(self, log, epoch) -> bool:
         loss = log[self.loss_key]
-        if loss < self.epsilon_low:
-            return True
+        # if loss < self.epsilon_low:
+        #     return True
         delta = self.last_loss - loss
-        if delta < 1e-5 and epoch > 10 and loss < self.epsilon_high:
-            return True
+        # if delta < 1e-5 and epoch > 10 and loss < self.epsilon_high:
+        #     return True
+        if delta < 1e-5 and epoch > 10:
+            self.stop_times += 1
+            if self.stop_times > 100:
+                return True
         self.last_loss = loss
         if (epoch + 1) % 20 == 0:
             self.scheduler.step()
@@ -232,7 +236,7 @@ class MeshProjectionMid(MeshProjection):
         self.projection_type = ProjectionType.LowProjection
         super(MeshProjectionMid, self).__init__(opt, mesh_path, folder_out)
         self.mid_embeddings = nn.Embedding(1, self.opt.num_gaussians * self.opt.dim_h).to(self.device)
-
+        self.stop_times = 0
 
 def main():
     for_parser = {'--model_name': {'default': 'chairs_large', 'type': str},
