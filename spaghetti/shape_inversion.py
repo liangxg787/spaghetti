@@ -131,7 +131,7 @@ class MeshProjection(occ_inference.Inference, abc.ABC):
         # self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
         # self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=0.1, patience=5, verbose=True,
         #                                    min_lr=1e-8)
-        self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+        self.scheduler = CosineAnnealingLR(
             self.optimizer, T_max=3000 - 100, eta_min=1e-6
         )
         self.last_loss = 1000000
@@ -202,10 +202,10 @@ class MeshProjectionMid(MeshProjection):
         self.warm_up_scheduler = train_utils.LinearWarmupScheduler(self.optimizer, 1e-3, 100)
         # self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=0.1, patience=5, verbose=True,
         #                                    min_lr=1e-8)
-        self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+        self.scheduler = CosineAnnealingLR(
             self.optimizer, T_max=3000 - 100, eta_min=1e-6
         )
-        # self.scheduler = torch.optim.lr_scheduler.OneCycleLR(
+        # self.scheduler = OneCycleLR(
         #     optimizer,
         #     max_lr=0.1,  # Peak LR (start higher than initial)
         #     total_steps=epochs * len(train_loader),  # Total training steps
