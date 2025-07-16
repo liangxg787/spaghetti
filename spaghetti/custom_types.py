@@ -48,7 +48,8 @@ def get_device(device_id: int) -> D:
 
 
 CUDA = get_device
-Optimizer = torch.optim.Adam
+# Optimizer = torch.optim.Adam
+Optimizer = torch.optim.AdamW
 Dataset = torch.utils.data.Dataset
 DataLoader = torch.utils.data.DataLoader
 Subset = torch.utils.data.Subset
