@@ -261,8 +261,8 @@ def main():
     opt = options.Options(tag=args['model_name'])
 
     if args['source'] == 'inversion':
-        model = MeshProjectionMid(opt, args['mesh_path'], args['output_name'], 150)
-        model.invert()
+        model = MeshProjectionMid(opt, args['mesh_path'], args['output_name'])
+        model.invert(150)
     else:
         model = occ_inference.Inference(opt)
         if args['source'] == 'random':
