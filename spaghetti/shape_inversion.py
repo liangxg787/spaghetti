@@ -1,5 +1,7 @@
 import abc
 
+from torch.optim.lr_scheduler import OneCycleLR
+
 from spaghetti.custom_types import *
 from spaghetti import options, constants
 from spaghetti.utils import myparse, mesh_utils, files_utils, train_utils, mcubes_meshing
@@ -126,7 +128,8 @@ class MeshProjection(occ_inference.Inference, abc.ABC):
         self.dl: DataLoader = get_data_loader(mesh_path)
         self.embeddings, self.optimizer = self.init_embeddings()
         self.warm_up_scheduler = train_utils.LinearWarmupScheduler(self.optimizer, 1e-3, 100)
-        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
+        # self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
+        self.scheduler = OneCycleLR(self.optimizer, max_lr=1e-3, steps_per_epoch=len(self.dl), epochs=100)
         self.last_loss = 1000000
         self.meshing = mcubes_meshing.MarchingCubesMeshing(self.device, scale=1, min_res=200)
         self.criterion = occ_loss.occupancy_bce
@@ -191,8 +194,9 @@ class MeshProjectionMid(MeshProjection):
         self.mid_embeddings.weight.data = mid_embedding
         self.last_loss = 123454321.
         self.optimizer = Optimizer(self.mid_embeddings.parameters(), lr=1e-7)
-        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
+        # self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
         self.warm_up_scheduler = train_utils.LinearWarmupScheduler(self.optimizer, 1e-3, 100)
+        self.scheduler = OneCycleLR(self.optimizer, max_lr=1e-3, steps_per_epoch=len(self.dl), epochs=100)
 
     def early_stop(self, log, epoch) -> bool:
         loss = log[self.loss_key]
