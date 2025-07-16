@@ -118,7 +118,7 @@ class MeshProjection(occ_inference.Inference, abc.ABC):
         embeddings = self.model.get_random_embeddings(1)
         embeddings_wrap = nn.Embedding(1, embeddings.shape[1]).to(self.device)
         embeddings_wrap.weight.data = embeddings.data
-        optimizer = Optimizer(embeddings_wrap.parameters(), lr=1e-7, weight_decay=1e-8)
+        optimizer = Optimizer(embeddings_wrap.parameters(), lr=1e-7, weight_decay=1e-3)
         return embeddings_wrap, optimizer
 
     def __init__(self, opt: options.Options, mesh_path: str, folder_out, num_epochs: int):
@@ -194,7 +194,7 @@ class MeshProjectionMid(MeshProjection):
         mid_embedding[item] = zs.reshape(1, -1).detach()
         self.mid_embeddings.weight.data = mid_embedding
         self.last_loss = 123454321.
-        self.optimizer = Optimizer(self.mid_embeddings.parameters(), lr=1e-7, weight_decay=1e-8)
+        self.optimizer = Optimizer(self.mid_embeddings.parameters(), lr=1e-7, weight_decay=1e-3)
         # self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, .5)
         self.warm_up_scheduler = train_utils.LinearWarmupScheduler(self.optimizer, 1e-3, 100)
         self.scheduler = OneCycleLR(self.optimizer, max_lr=1e-1, steps_per_epoch=len(self.dl),
