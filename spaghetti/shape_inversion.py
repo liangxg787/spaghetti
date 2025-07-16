@@ -209,7 +209,7 @@ class MeshProjectionMid(MeshProjection):
                     self.stop_times = []
             else:
                 self.stop_times.append(epoch)
-            if len(self.stop_times) > 100:
+            if len(self.stop_times) > 300:
                 self.stop_times = []
                 return True
         self.last_loss = loss
