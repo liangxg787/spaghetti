@@ -243,6 +243,7 @@ class MeshProjectionMid(MeshProjection):
         self.mid_embeddings = nn.Embedding(1, self.opt.num_gaussians * self.opt.dim_h).to(self.device)
         self.stop_times = []
 
+
 def main():
     for_parser = {'--model_name': {'default': 'chairs_large', 'type': str},
                   '--output_name': {'default': 'samples', 'type': str},
