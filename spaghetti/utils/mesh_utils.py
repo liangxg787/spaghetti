@@ -626,7 +626,7 @@ def get_fast_inside_outside(mesh: T_Mesh, points: ARRAY):
             pts_in = points[batch_size * i:]
         else:
             pts_in = points[batch_size * i: batch_size * (i + 1)]
-        w = igl.fast_winding_number_for_meshes(*mesh, pts_in)
+        w = igl.fast_winding_number(*mesh, pts_in)
         w = np.less_equal(w, .9)
         labels.append(w)
     return np.concatenate(labels, axis=0)
