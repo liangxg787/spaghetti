@@ -15,11 +15,11 @@ def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], vox
             skimage.measure) else skimage.measure.marching_cubes_lewiner
 
         # BUG: Surface level must be within volume data range
-        data_min, data_max = numpy_3d_occ_tensor.min(), numpy_3d_occ_tensor.max()
+        # data_min, data_max = numpy_3d_occ_tensor.min(), numpy_3d_occ_tensor.max()
         mc_level = 0.0
-        if mc_level < data_min or mc_level > data_max:
-            # If mc_level is out of range, use the median of the data as the default level
-            mc_level = (data_min + data_max) / 2.0
+        # if mc_level < data_min or mc_level > data_max:
+        #     # If mc_level is out of range, use the median of the data as the default level
+        #     mc_level = (data_min + data_max) / 2.0
 
         verts, faces, normals, values = marching_cubes(numpy_3d_occ_tensor,
                                                        level=mc_level,
