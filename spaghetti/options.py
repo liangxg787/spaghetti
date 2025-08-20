@@ -79,6 +79,11 @@ class Options:
         self.augmentation_rotation = 0.3
         self.augmentation_scale = .2
         self.augmentation_translation = .3
+        self.as_tait_bryan = False
+        self.hierarchical = ()
+        self.mask_head_by_gmm = 0
+        self.pos_encoding_type = 'sin'
+        self.subset = -1
         self.fill_args(kwargs)
 
 
@@ -110,3 +115,4 @@ class OptionsSingle(Options):
         self.augmentation_translation = .3
         self.prune_every = 200
         self.fill_args(kwargs)
+
