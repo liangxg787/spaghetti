@@ -7,9 +7,11 @@ from spaghetti.utils import files_utils
 from spaghetti import options, constants
 from spaghetti.models import models_utils, occ_gmm
 from spaghetti.utils.log_config import logger
+from spaghetti.models.occ_gmm_v1 import OccGen
 
 LI = Union[T, float, int]
-Models = {'spaghetti': occ_gmm.Spaghetti}
+Models = {'spaghetti': occ_gmm.Spaghetti,
+          'occ_gmm': OccGen}
 
 
 def is_model_clean(model: nn.Module) -> bool:

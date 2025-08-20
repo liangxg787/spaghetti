@@ -80,3 +80,33 @@ class Options:
         self.augmentation_scale = .2
         self.augmentation_translation = .3
         self.fill_args(kwargs)
+
+
+class OptionsSingle(Options):
+
+    def __init__(self, **kwargs):
+        super(OptionsSingle, self).__init__(**kwargs)
+        self.tag = 'single_wolf_prune'
+        self.dataset_name = 'MalteseFalconSolid'
+        self.dim_z = 64
+        self.pos_dim = 64 - 3
+        self.dim_h = 64
+        self.dim_zh = 64
+        self.num_gaussians = 12
+        self.gmm_weight = 1
+        self.batch_size = 18
+        self.num_samples = 3000
+        self.dataset_size = 1
+        self.symmetric = (False, False, False)
+        self.head_type = "deep_sdf"
+        self.head_sdf_size = 3
+        self.reg_weight = 1e-4
+        self.num_layers_head = 4
+        self.num_heads_head = 4
+        self.disentanglement = True
+        self.disentanglement_weight = 1
+        self.augmentation_rotation = .5
+        self.augmentation_scale = .3
+        self.augmentation_translation = .3
+        self.prune_every = 200
+        self.fill_args(kwargs)
