@@ -64,6 +64,8 @@ class Options:
         self.num_heads_head = 8
         self.head_occ_size = 5
         self.head_occ_type = 'skip'
+        self.head_type = "deep_sdf"
+        self.head_sdf_size = 2
         self.batch_size = 18
         self.num_samples = 2000
         self.dataset_size = -1
