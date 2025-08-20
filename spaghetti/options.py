@@ -56,6 +56,7 @@ class Options:
         self.min_split = 4
         self.max_split = 12
         self.gmm_weight = 1
+        self.loss_func = [LossType.CROSS, LossType.HINGE, LossType.IN_OUT][2]
         self.decomposition_network = 'transformer'
         self.decomposition_num_layers = 4
         self.num_layers = 4

@@ -9,6 +9,7 @@ import torch.nn as nn
 import torch.nn.functional as nnf
 import torch.optim.optimizer
 import torch.utils.data
+import enum
 
 from spaghetti.constants import DEBUG
 
@@ -52,3 +53,14 @@ Optimizer = torch.optim.Adam
 Dataset = torch.utils.data.Dataset
 DataLoader = torch.utils.data.DataLoader
 Subset = torch.utils.data.Subset
+
+
+class LossType(enum.Enum):
+
+    @DynamicClassAttribute
+    def value(self) -> str:
+        return super(LossType, self).value
+
+    CROSS = 'cross'
+    HINGE = 'hinge'
+    IN_OUT = 'in_out'
