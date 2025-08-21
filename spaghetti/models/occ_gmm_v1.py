@@ -1,5 +1,6 @@
 from spaghetti.options_v1 import Options, OptionsSingle
-from spaghetti.models import models_utils, transformer, mlp_models, gm_utils, deep_sdf
+from spaghetti.models import models_utils, mlp_models, gm_utils, deep_sdf
+from spaghetti.models import transformer_v1 as transformer
 from spaghetti import constants
 from spaghetti.custom_types import *
 from torch import distributions

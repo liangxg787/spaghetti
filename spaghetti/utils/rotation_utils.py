@@ -59,15 +59,14 @@ def get_random_rotation(batch_size: int) -> T:
 
 
 def rand_bounded_rotation_matrix(cache_size: int, theta_range: float = .1):
-
     def create_cache():
         # from http://www.realtimerendering.com/resources/GraphicsGems/gemsiii/rand_rotation.c
         with torch.no_grad():
             theta, phi, z = torch.rand(cache_size, 3).split((1, 1, 1), dim=1)
             theta = (2 * theta - 1) * theta_range + 1
-            theta = np.pi * theta   # Rotation about the pole (Z).
+            theta = np.pi * theta  # Rotation about the pole (Z).
             phi = phi * 2 * np.pi  # For direction of pole deflection.
-            z = 2 * z * theta_range # For magnitude of pole deflection.
+            z = 2 * z * theta_range  # For magnitude of pole deflection.
             r = z.sqrt()
             v = torch.cat((torch.sin(phi) * r, torch.cos(phi) * r, torch.sqrt(2.0 - z)), dim=1)
             st = torch.sin(theta).squeeze(1)
@@ -117,7 +116,7 @@ def tb_to_rot(abc: T) -> T:
 
 def rot_to_tb(rot: T) -> T:
     sy = torch.sqrt(rot[:, 0, 0] * rot[:, 0, 0] + rot[:, 1, 0] * rot[:, 1, 0])
-    out = torch.zeros(rot.shape[0], 3, device = rot.device)
+    out = torch.zeros(rot.shape[0], 3, device=rot.device)
     mask = sy.gt(1e-6)
     z = torch.atan2(rot[mask, 2, 1], rot[mask, 2, 2])
     y = torch.atan2(-rot[mask, 2, 0], sy[mask])
@@ -158,3 +157,15 @@ def get_tait_bryan_from_p(p: T) -> T:
     angles[:, 1] = angles[:, 1] * 2
     angles = angles.view(*shape[:2], 3)
     return angles
+
+
+def get_p_from_tait_bryan(splitted: TS) -> T:
+    angles = splitted[0]
+    shape = angles.shape
+    angles = angles.view(-1, 3).sigmoid()
+    angles = np.pi * (2 * angles - 1)
+    angles[:, 1] = angles[:, 1] / 2
+    rot: T = tb_to_rot(angles)
+    p = rot.permute(0, 2, 1)
+    p = p.view(*shape[:], 3)
+    return p
