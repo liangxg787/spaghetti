@@ -5,7 +5,7 @@ from spaghetti.custom_types import *
 from spaghetti import constants
 from spaghetti.options_v1 import Options
 from spaghetti.utils import train_utils, mcubes_meshing, files_utils, mesh_utils
-from spaghetti.models.occ_gmm import OccGen
+from spaghetti.models.occ_gmm_v1 import OccGen
 from spaghetti.models import models_utils
 
 from functools import partial
