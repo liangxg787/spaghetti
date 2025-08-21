@@ -56,7 +56,6 @@ class Options:
         self.min_split = 4
         self.max_split = 12
         self.gmm_weight = 1
-        self.loss_func = [LossType.CROSS, LossType.HINGE, LossType.IN_OUT][2]
         self.decomposition_network = 'transformer'
         self.decomposition_num_layers = 4
         self.num_layers = 4
@@ -65,8 +64,6 @@ class Options:
         self.num_heads_head = 8
         self.head_occ_size = 5
         self.head_occ_type = 'skip'
-        self.head_type = "deep_sdf"
-        self.head_sdf_size = 2
         self.batch_size = 18
         self.num_samples = 2000
         self.dataset_size = -1
@@ -82,40 +79,4 @@ class Options:
         self.augmentation_rotation = 0.3
         self.augmentation_scale = .2
         self.augmentation_translation = .3
-        self.as_tait_bryan = False
-        self.hierarchical = ()
-        self.mask_head_by_gmm = 0
-        self.pos_encoding_type = 'sin'
-        self.subset = -1
         self.fill_args(kwargs)
-
-
-class OptionsSingle(Options):
-
-    def __init__(self, **kwargs):
-        super(OptionsSingle, self).__init__(**kwargs)
-        self.tag = 'single_wolf_prune'
-        self.dataset_name = 'MalteseFalconSolid'
-        self.dim_z = 64
-        self.pos_dim = 64 - 3
-        self.dim_h = 64
-        self.dim_zh = 64
-        self.num_gaussians = 12
-        self.gmm_weight = 1
-        self.batch_size = 18
-        self.num_samples = 3000
-        self.dataset_size = 1
-        self.symmetric = (False, False, False)
-        self.head_type = "deep_sdf"
-        self.head_sdf_size = 3
-        self.reg_weight = 1e-4
-        self.num_layers_head = 4
-        self.num_heads_head = 4
-        self.disentanglement = True
-        self.disentanglement_weight = 1
-        self.augmentation_rotation = .5
-        self.augmentation_scale = .3
-        self.augmentation_translation = .3
-        self.prune_every = 200
-        self.fill_args(kwargs)
-
