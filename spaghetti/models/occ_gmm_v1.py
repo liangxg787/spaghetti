@@ -1,4 +1,4 @@
-from spaghetti.options import Options, OptionsSingle
+from spaghetti.options_v1 import Options, OptionsSingle
 from spaghetti.models import models_utils, transformer, mlp_models, gm_utils, deep_sdf
 from spaghetti import constants
 from spaghetti.custom_types import *
