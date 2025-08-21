@@ -524,11 +524,11 @@ class Inference:
 
     def __init__(self, opt: Options):
         self.opt = opt
-        model: Tuple[OccGen, Options] = train_utils.model_lc(opt)
+        model: Tuple[OccGen, Options] = spaghetti.train_utils.model_lc(opt)
         self.model, self.opt = model
         self.model.eval()
         self.temperature = 1.
         self.mid: Optional[T] = None
         self.gmms: Optional[TN] = None
-        self.get_rotation = utils.rotation_utils.rand_bounded_rotation_matrix(100000)
+        self.get_rotation = spaghetti.utils.rotation_utils.rand_bounded_rotation_matrix(100000)
         self.meshing = mcubes_meshing.MarchingCubesMeshing(self.device, max_num_faces=20000)
