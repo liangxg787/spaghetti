@@ -531,4 +531,4 @@ class Inference:
         self.mid: Optional[T] = None
         self.gmms: Optional[TN] = None
         self.get_rotation = spaghetti.utils.rotation_utils.rand_bounded_rotation_matrix(100000)
-        self.meshing = mcubes_meshing.MarchingCubesMeshing(self.device, max_num_faces=20000)
+        self.meshing = mcubes_meshing.MarchingCubesMeshing(self.device)
