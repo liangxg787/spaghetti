@@ -3,8 +3,8 @@ import os
 import pickle
 if pickle.HIGHEST_PROTOCOL < 5:
     import pickle5 as pickle
-import constants as const
-from custom_types import *
+from spaghetti import constants as const
+from spaghetti.custom_types import *
 
 
 class Options:
