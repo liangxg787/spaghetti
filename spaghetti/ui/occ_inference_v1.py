@@ -524,7 +524,7 @@ class Inference:
 
     def __init__(self, opt: Options):
         self.opt = opt
-        model: Tuple[OccGen, Options] = spaghetti.train_utils.model_lc(opt)
+        model: Tuple[OccGen, Options] = spaghetti.utils.train_utils.model_lc(opt)
         self.model, self.opt = model
         self.model.eval()
         self.temperature = 1.
