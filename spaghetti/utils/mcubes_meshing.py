@@ -10,8 +10,9 @@ from spaghetti import constants
 from spaghetti.utils.log_config import logger
 
 
-def mcubes_skimage(numpy_3d_occ_tensor: T, voxel_grid_origin: List[float], voxel_size: float) -> T_Mesh:
-    # numpy_3d_occ_tensor = pytorch_3d_occ_tensor.numpy()
+def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], voxel_size: float) -> T_Mesh:
+    numpy_3d_occ_tensor = pytorch_3d_occ_tensor.numpy()
+    numpy_3d_occ_tensor = cp.asarray(numpy_3d_occ_tensor)
     try:
         # marching_cubes = skimage.measure.marching_cubes if 'marching_cubes' in dir(
         #     skimage.measure) else skimage.measure.marching_cubes_lewiner
@@ -141,11 +142,7 @@ class MarchingCubesMeshing:
             if get_time:
                 return end - start
 
-        # mesh_a = mcubes_skimage(occ_values.data.cpu(), voxel_origin, voxel_size)
-
-        occ_values_gpu = cp.asarray(occ_values.data.cpu())
-        mesh_a = mcubes_skimage(occ_values_gpu, voxel_origin, voxel_size)
-
+        mesh_a = mcubes_skimage(occ_values.data.cpu(), voxel_origin, voxel_size)
         # mesh_a = mcubes_torch(occ_values, voxel_origin, voxel_size)
 
         if verbose:
