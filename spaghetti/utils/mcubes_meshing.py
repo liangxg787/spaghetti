@@ -1,8 +1,6 @@
 import time
 
 import skimage.measure
-import cupy as cp
-# from cucim.skimage import measure
 
 from spaghetti.custom_types import *
 from spaghetti.utils.train_utils import Logger
@@ -12,7 +10,6 @@ from spaghetti.utils.log_config import logger
 
 def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], voxel_size: float) -> T_Mesh:
     numpy_3d_occ_tensor = pytorch_3d_occ_tensor.numpy()
-    numpy_3d_occ_tensor = cp.asarray(numpy_3d_occ_tensor)
     try:
         marching_cubes = skimage.measure.marching_cubes if 'marching_cubes' in dir(
             skimage.measure) else skimage.measure.marching_cubes_lewiner
