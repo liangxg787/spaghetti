@@ -1,9 +1,6 @@
 import time
 
-# import skimage.measure
-import cupy as cp
-import cucim
-from cucim.skimage import measure
+import skimage.measure
 
 from spaghetti.custom_types import *
 from spaghetti.utils.train_utils import Logger
@@ -14,11 +11,8 @@ from spaghetti.utils.log_config import logger
 def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], voxel_size: float) -> T_Mesh:
     numpy_3d_occ_tensor = pytorch_3d_occ_tensor.numpy()
     try:
-        # marching_cubes = skimage.measure.marching_cubes if 'marching_cubes' in dir(
-        #     skimage.measure) else skimage.measure.marching_cubes_lewiner
-
-        marching_cubes = measure.marching_cubes if 'marching_cubes' in dir(
-            measure) else measure.marching_cubes_lewiner
+        marching_cubes = skimage.measure.marching_cubes if 'marching_cubes' in dir(
+            skimage.measure) else skimage.measure.marching_cubes_lewiner
 
         # BUG: Surface level must be within volume data range
         data_min, data_max = numpy_3d_occ_tensor.min(), numpy_3d_occ_tensor.max()
@@ -142,10 +136,7 @@ class MarchingCubesMeshing:
             if get_time:
                 return end - start
 
-        # mesh_a = mcubes_skimage(occ_values.data.cpu(), voxel_origin, voxel_size)
-
-        occ_values_gpu = cp.asarray(occ_values.data.cpu())
-        mesh_a = mcubes_skimage(occ_values_gpu, voxel_origin, voxel_size)
+        mesh_a = mcubes_skimage(occ_values.data.cpu(), voxel_origin, voxel_size)
         # mesh_a = mcubes_torch(occ_values, voxel_origin, voxel_size)
 
         if verbose:
