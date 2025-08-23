@@ -1,8 +1,8 @@
 import time
 
-# import skimage.measure
+import skimage.measure
 import cupy as cp
-from cucim.skimage import measure
+# from cucim.skimage import measure
 
 from spaghetti.custom_types import *
 from spaghetti.utils.train_utils import Logger
@@ -14,10 +14,8 @@ def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], vox
     numpy_3d_occ_tensor = pytorch_3d_occ_tensor.numpy()
     numpy_3d_occ_tensor = cp.asarray(numpy_3d_occ_tensor)
     try:
-        # marching_cubes = skimage.measure.marching_cubes if 'marching_cubes' in dir(
-        #     skimage.measure) else skimage.measure.marching_cubes_lewiner
-
-        marching_cubes = measure.marching_cubes
+        marching_cubes = skimage.measure.marching_cubes if 'marching_cubes' in dir(
+            skimage.measure) else skimage.measure.marching_cubes_lewiner
 
         # BUG: Surface level must be within volume data range
         data_min, data_max = numpy_3d_occ_tensor.min(), numpy_3d_occ_tensor.max()
