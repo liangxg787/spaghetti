@@ -17,8 +17,7 @@ def mcubes_skimage(pytorch_3d_occ_tensor: T, voxel_grid_origin: List[float], vox
         # marching_cubes = skimage.measure.marching_cubes if 'marching_cubes' in dir(
         #     skimage.measure) else skimage.measure.marching_cubes_lewiner
 
-        marching_cubes = measure.marching_cubes if 'marching_cubes' in dir(
-            measure) else measure.marching_cubes_lewiner
+        marching_cubes = measure.marching_cubes
 
         # BUG: Surface level must be within volume data range
         data_min, data_max = numpy_3d_occ_tensor.min(), numpy_3d_occ_tensor.max()
